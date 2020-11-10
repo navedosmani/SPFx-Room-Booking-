@@ -8,3 +8,17 @@ Plain JS component was done by October 2020
 SPFx with React started in November 2020
 
 November 10 - Adding SPFx files
+
+
+
+
+
+
+Terminal Commands
+-------------------
+npm install rrule
+npm install --save @fullcalendar/react @fullcalendar/rrule @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+npm install moment
+
+gulp package-solution
+gulp serve --nobrowser
