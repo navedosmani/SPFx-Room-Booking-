@@ -5,18 +5,15 @@ import { IMergedCalendarState } from './IMergedCalendarState';
 import { escape } from '@microsoft/sp-lodash-subset';
 
 import FullCalendar from '@fullcalendar/react';
-import {Calendar} from '@fullcalendar/core';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import rrulePlugin from '@fullcalendar/rrule';
 
-
 import {CalendarOperations} from '../Services/CalendarOperations';
 
 export default class MergedCalendar extends React.Component<IMergedCalendarProps, IMergedCalendarState, {}> {
   
-
   public _calendarOps : CalendarOperations;
   constructor(props:IMergedCalendarProps){
     super(props);
