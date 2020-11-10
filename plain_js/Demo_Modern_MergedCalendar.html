@@ -1,0 +1,83 @@
+<head>
+	<title>Merged Calendar for Modern Pages SPO</title>
+</head>
+
+<!-- SP files for modal dialog -->
+<link rel="stylesheet" type="text/css" href="/_layouts/15/1033/styles/corev15.css"/>
+<script type="text/javascript" src="/_layouts/15/init.js"></script>
+<script type="text/javascript" src="/_layouts/15/msajaxbundle.js"></script>
+<script type="text/javascript" src="/_layouts/15/1033/sp.res.js"></script>
+<script type="text/javascript" src="/_layouts/15/sp.init.js"></script>
+<script type="text/javascript" src="/_layouts/15/sp.ui.dialog.js"></script>
+<script type="text/javascript" src="/_layouts/15/core.js"></script>
+
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+<!-- MSAL for graph api -->
+<script src="https://secure.aadcdn.microsoftonline-p.com/lib/1.0.0/js/msal.js"></script>
+
+<!-- Main FullCalendar CSS -->
+<link href='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.css' rel='stylesheet' />
+<link href='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.css' rel='stylesheet' />
+
+<!-- Moment -->
+<script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+
+<!-- RRule Plugin -->
+<script src="https://jakubroztocil.github.io/rrule/dist/es5/rrule.min.js"></script>
+
+<!-- Main FullCalendar JS -->
+<script src='https://unpkg.com/@fullcalendar/core@4.4.0/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/interaction@4.4.0/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/daygrid@4.4.0/main.min.js'></script>
+<script src='https://unpkg.com/@fullcalendar/timegrid@4.4.0/main.min.js'></script>
+<script src="https://unpkg.com/@fullcalendar/rrule@4.4.0/main.min.js"></script>
+
+<!-- Custom -->
+<link rel="stylesheet" href="https://pdsb1.sharepoint.com/_catalogs/masterpage/PDSB/WebParts/calendar/MergedCalendar/css/common.css">
+<script src="https://pdsb1.sharepoint.com/_catalogs/masterpage/PDSB/WebParts/calendar/MergedCalendar/js/PDSB.Libs.js"></script>
+<script src="https://pdsb1.sharepoint.com/_catalogs/masterpage/PDSB/WebParts/calendar/MergedCalendar/js/common6_modern.js"></script>
+
+<!-- Fabric UI -->
+<link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.min.css" />
+<link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/css/fabric.components.min.css" />
+<link rel="stylesheet" href="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-core/9.6.1/css/fabric.min.css"/> <!--Fabric Icons-->
+<script src="https://static2.sharepointonline.com/files/fabric/office-ui-fabric-js/1.4.0/js/fabric.min.js"></script>
+
+
+<!-- Settings Button -->
+<button class="ms-Button ms-Button--hero float-r" onclick="PDSB.MergedCalendar.OpenFabricDlg()" type="button">
+	<span class="ms-Button-icon"><i class="ms-Icon ms-font-xl ms-Icon--CalendarSettings ms-fontColor-themePrimary"></i></span> 
+	<span class="ms-Button-label">Calendar Settings</span> 
+</button>
+
+<!-- Merged Calendar -->
+<div id='calendar' data-mergedCal viewOnly></div>
+
+<!-- Dialog -->
+<div class="docs-DialogExample-close dlgCal">
+	<div class="ms-Dialog ms-Dialog--close">
+		<button class="ms-Dialog-button ms-Dialog-buttonClose" type="button">
+			<i class="ms-Icon ms-Icon--Cancel"></i>
+		</button>
+		<div class="ms-Dialog-title">Please choose the required Calendars</div>
+		<div class="ms-Dialog-content">
+			<!-- Modal Dialog Content filled by script -->
+		</div>
+		<div class="ms-Dialog-actions">
+			<button class="ms-Button ms-Dialog-action ms-Button--primary">
+				<span class="ms-Button-label">Save</span>
+			</button>
+			<button class="ms-Button ms-Dialog-action" type="button">
+				<span class="ms-Button-label">Cancel</span>
+			</button>
+		</div>
+	</div>
+	<label class="docs-DialogExample-label"></label>
+</div>
+
+
+
+
