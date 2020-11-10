@@ -6,3 +6,5 @@ The journey started in March 2020 with just plain JS
 Plain JS component was done by October 2020
 
 SPFx with React started in November 2020
+
+November 10 - Adding SPFx files
