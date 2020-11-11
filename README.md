@@ -13,6 +13,14 @@ Cloning to other machine
 
 
 
+Milestones
+------------
+- FullCalendar Integration with react
+- Get calendar information from SP list using Rest API & Display in FullCalendar
+- FullCalendar full day event bug resolution
+- FullCalendar Recurrent events parsing
+
+
 
 Terminal Commands
 -------------------
