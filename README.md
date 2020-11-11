@@ -44,3 +44,4 @@ gulp package-solution --ship
 Issues
 --------
 https://github.com/SharePoint/sp-dev-docs/issues/2473
+https://docs.microsoft.com/en-us/sharepoint/dev/spfx/connect-to-anonymous-apis
