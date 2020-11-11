@@ -1,5 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse} from "@microsoft/sp-http";
+import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse, HttpClient} from "@microsoft/sp-http";
 import * as moment from 'moment';
 
 export class CalendarOperations{
@@ -36,7 +36,7 @@ export class CalendarOperations{
     }
 
     public getExtSchool(context:WebPartContext):any{
-        context.aadHttpClientFactory
+        /*context.aadHttpClientFactory
             .getClient("https://pdsb1.azure-api.net")
             .then((client: AadHttpClient):void =>{
                 this.apiClient = client;
@@ -48,7 +48,17 @@ export class CalendarOperations{
                             console.log(results);
                         })
                     })
+            })*/
+        
+
+        context.httpClient
+            .get("https://schools.peelschools.org/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", HttpClient.configurations.v1)
+            .then((res: HttpClientResponse): Promise<any> => {
+                return res.json();
             })
+            .then((response: any): void => {
+                console.log(response);
+            });
     }
 
     public getCalSettings(context:WebPartContext, listName: string) : Promise <{}[]>{
