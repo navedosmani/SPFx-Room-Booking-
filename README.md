@@ -9,7 +9,7 @@ SPFx with React started in November 2020
 
 November 10 - Adding SPFx files
 
-
+Cloning to other machine
 
 
 
