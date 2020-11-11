@@ -12,7 +12,13 @@
       "privacyUrl": "",
       "termsOfUseUrl": "",
       "mpnId": ""
-    }
+    },
+    "webApiPermissionRequests": [
+      {
+        "resource": "MergedCalendar",
+        "scope": "SignIn"
+      }
+    ]
   },
   "paths": {
     "zippedPackage": "solution/merged-calendar.sppkg"

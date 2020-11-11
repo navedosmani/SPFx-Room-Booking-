@@ -6,9 +6,8 @@ import {
 import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import { escape } from '@microsoft/sp-lodash-subset';
 import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
-import { sp } from "@pnp/sp";
+//import { sp } from "@pnp/sp";
 
-import * as strings from 'HelloWorldWebPartStrings';
 
 export interface IHelloWorldWebPartProps {
   description: string;
@@ -22,9 +21,9 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart <IHelloWorl
   private apiUrl : string = "https://pdsbserviceapi.azurewebsites.net/api/wcf/GetLunchRoomSupByLocation?LocationId=1415";
   
   protected onInit(): Promise<void> {
-    sp.setup({
+    /*sp.setup({
       spfxContext: this.context      
-    });      
+    });  */    
 
     return new Promise<void>((resolve: () => void, reject: (error: any) => void): void => {
       this.context.aadHttpClientFactory
@@ -57,29 +56,7 @@ export default class HelloWorldWebPart extends BaseClientSideWebPart <IHelloWorl
       });
   }
 
-  protected get dataVersion(): Version {
-  return Version.parse('1.0');
-}
 
-  protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
-  return {
-    pages: [
-      {
-        header: {
-          description: strings.PropertyPaneDescription
-        },
-        groups: [
-          {
-            groupName: strings.BasicGroupName,
-            groupFields: [
-              PropertyPaneTextField('description', {
-                label: strings.DescriptionFieldLabel
-              })
-            ]
-          }
-        ]
-      }
-    ]
-  };
-}
+
+
 }

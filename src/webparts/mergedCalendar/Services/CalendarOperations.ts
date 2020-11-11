@@ -1,11 +1,55 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions} from "@microsoft/sp-http";
+import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse} from "@microsoft/sp-http";
 import * as moment from 'moment';
-import {EventFormat} from '../Services/EventFormat';
 
 export class CalendarOperations{
 
-    public _evtFormat : EventFormat;
+    private apiClient : AadHttpClient;
+    public getExt(context:WebPartContext):any{
+         const appClientID :string = "3b7def80-9920-47b6-924d-1edcab90a211";
+         let apiUrl :string = "https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items";
+
+        // const appClientID :string = "eb994916-2c73-4bc6-b4bd-c945f62eac26";
+        // let apiUrl :string = "https://pdsbserviceapi.azurewebsites.net/api/wcf/GetLunchRoomSupByLocation?LocationId=1415";
+
+        //const appClientID :string = "2eb4dc90-8ac5-414b-ab9f-0be1be2c0b61";
+        //let apiUrl :string = "https://graph.microsoft.com/v1.0/me/events?$select=subject,body,bodyPreview,organizer,attendees,start,end,location";
+        
+        return new Promise<void>((resolve: () => void, reject: (error: any) => void): void => {
+            context.aadHttpClientFactory
+                .getClient(appClientID)
+                .then((client: AadHttpClient)=>{
+                    this.apiClient = client;
+                    console.log(client)
+                    resolve();
+
+                    this.apiClient
+                        .get(apiUrl, AadHttpClient.configurations.v1)
+                        .then((res:HttpClientResponse) : Promise<any>=>{
+                            return res.json().then((results:any)=>{
+                                console.log(results);
+                            });
+                        })
+
+                },err => reject(err));
+        });
+    }
+
+    public getExtSchool(context:WebPartContext):any{
+        context.aadHttpClientFactory
+            .getClient("https://pdsb1.azure-api.net")
+            .then((client: AadHttpClient):void =>{
+                this.apiClient = client;
+                console.log(client)
+                this.apiClient
+                    .get("https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", AadHttpClient.configurations.v1)
+                    .then((res:HttpClientResponse) : Promise <any>=>{
+                        return res.json().then((results:any)=>{
+                            console.log(results);
+                        })
+                    })
+            })
+    }
 
     public getCalSettings(context:WebPartContext, listName: string) : Promise <{}[]>{
         let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items" ;
@@ -23,13 +67,45 @@ export class CalendarOperations{
         })
     }
 
-    public getCalsData(context: WebPartContext, calName:string) : Promise <{}[]>{
-        let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+calName+"')/items?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=1000",
+    public resolveCalUrl(context: WebPartContext, calType:string, calUrl:string, calName:string) : string{
+        let resolvedCalUrl:string,
+            azurePeelSchoolsUrl :string = "https://pdsb1.azure-api.net/peelschools",
+            restApiUrl :string = "/_api/web/lists/getByTitle('"+calName+"')/items",
+            restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=1000";
+
+        switch (calType){
+            case "Internal":
+                resolvedCalUrl = calUrl + restApiUrl + restApiParams;
+                break;
+            case "My School":
+                resolvedCalUrl = context.pageContext.web.absoluteUrl + restApiUrl + restApiParams;
+                break;
+            case "Rotary":
+                break;
+            case "External":
+                resolvedCalUrl = azurePeelSchoolsUrl + calUrl.substring(calUrl.indexOf('.org/') + 4, calUrl.length) + restApiUrl + restApiParams;
+                break;
+            case "Graph":
+                break;
+        }
+        return resolvedCalUrl;
+    }
+
+    public getCalsData(context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]>{
+        
+        let calUrl :string = this.resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
             calEvents : {}[] = [] ;
+
+        const myOptions: ISPHttpClientOptions = {
+            headers: new Headers(),
+            method: 'GET',
+            mode: 'cors'
+            
+        };
 
         return new Promise <{}[]> (async(resolve, reject) =>{
             context.spHttpClient
-                .get(restApiUrl, SPHttpClient.configurations.v1)
+                .get(calUrl, SPHttpClient.configurations.v1, myOptions)
                 .then((response: SPHttpClientResponse)=>{
                     response.json().then((results:any)=>{
                         results.value.map((result:any)=>{
@@ -46,6 +122,9 @@ export class CalendarOperations{
                         })
                         resolve(calEvents);
                     })
+                }, (error:any):void=>{
+                    reject("Error occured: " + error);
+                    console.log(error);
                 })
         })
     }
@@ -57,15 +136,17 @@ export class CalendarOperations{
         return this.getCalSettings(context, calSettingsListName).then(async (settings:any) => {
             const dataFetches = settings.map(setting => {
                 // This `return` is needed otherwise `undefined` is returned in this `map()` call.
-                return this.getCalsData(context, setting.CalName).then((events: any) => {
-                    const eventSrc = {
-                        events: events,
-                        color: this.getColorHex(setting.BgColor),
-                        textColor: this.getColorHex(setting.FgColor)
-                    }
-                    eventSources.push(eventSrc);
-                    //console.log("Pushed data for event source: " + setting.CalName);
-                });
+                if(setting.ShowCal){
+                    return this.getCalsData(context, setting).then((events: any) => {
+                        const eventSrc = {
+                            events: events,
+                            color: this.getColorHex(setting.BgColor),
+                            textColor: this.getColorHex(setting.FgColor)
+                        }
+                        eventSources.push(eventSrc);
+                        //console.log("Pushed data for event source: " + setting.CalName);
+                    });
+                }
             });
             await Promise.all(dataFetches);
             //console.log("Total event sources fetched", eventSources.length);

@@ -21,34 +21,23 @@ export default class MergedCalendar extends React.Component<IMergedCalendarProps
     this.state = {
       weekendsVisible: false, 
       eventSources: [],
-      calSettingsList: "CalendarSettings"
+      calSettingsList: "CalendarSettings",
     };
   }
 
   public componentDidMount(){
-    /*this._calendarOps.getCalSettings(this.props.context, this.state.calSettingsList).then((result:any)=>{
-      console.log("result", result);
-    });*/
-
-    /*this._calendarOps.getCalsData(this.props.context, "Events").then((result:{}[])=>{
-      console.log("result1", result.length)
-      this.setState({eventSources: result});
-    })*/
 
     this._calendarOps.displayCalendars(this.props.context, this.state.calSettingsList).then((result:{}[])=>{
-      //console.log("Total results", result.length);
       this.setState({eventSources: result});
-    })
+    });
 
+    //this._calendarOps.getExt(this.props.context);
+    //this._calendarOps.getExtSchool(this.props.context);
     
   }
 
   public handleDateClick = (arg:any)=>{
     alert(arg.dateStr);
-  }
-
-  public logResults = () => {
-    //this._calendarOps.getCalsData(this.props.context);
   }
 
   /*public renderEventContent = (eventInfo:any)=>{
