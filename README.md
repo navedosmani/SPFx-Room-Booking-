@@ -25,11 +25,17 @@ Milestones
 Terminal Commands
 -------------------
 npm install rrule
+
 npm install --save @fullcalendar/react @fullcalendar/rrule @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
+
 npm install moment
 
+
 gulp package-solution
+
 gulp serve --nobrowser
 
+
 gulp bundle --ship
+
 gulp package-solution --ship
