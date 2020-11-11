@@ -8,7 +8,6 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
 import { sp } from "@pnp/sp";
 
-import styles from './HelloWorldWebPart.module.scss';
 import * as strings from 'HelloWorldWebPartStrings';
 
 export interface IHelloWorldWebPartProps {
