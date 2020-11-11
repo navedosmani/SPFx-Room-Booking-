@@ -1,0 +1,24 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "poc-web-part-client-side-solution",
+    "id": "603cbc0d-d3e0-4527-b301-810815f99818",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "webApiPermissionRequests": [
+      {
+        "resource": "SecuredWSApp",
+        "scope": "SignIn"
+      },
+      {
+        "resource": "Windows Azure Active Directory",
+        "scope": "User.Read"
+      }
+    ]  
+  },
+  "paths": {
+    "zippedPackage": "solution/poc-web-part.sppkg"
+  }
+}
