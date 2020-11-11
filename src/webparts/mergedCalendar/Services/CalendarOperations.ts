@@ -1,7 +1,11 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
 import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions} from "@microsoft/sp-http";
+import * as moment from 'moment';
+import {EventFormat} from '../Services/EventFormat';
 
 export class CalendarOperations{
+
+    public _evtFormat : EventFormat;
 
     public getCalSettings(context:WebPartContext, listName: string) : Promise <{}[]>{
         let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items" ;
@@ -20,8 +24,8 @@ export class CalendarOperations{
     }
 
     public getCalsData(context: WebPartContext, calName:string) : Promise <{}[]>{
-        let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+calName+"')/items?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=1000";
-        var calEvents : {}[] = [] ;
+        let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+calName+"')/items?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=1000",
+            calEvents : {}[] = [] ;
 
         return new Promise <{}[]> (async(resolve, reject) =>{
             context.spHttpClient
@@ -32,13 +36,12 @@ export class CalendarOperations{
                             calEvents.push({
                                 id: result.ID,
                                 title: result.Title,
-                                start: result.EventDate,
-                                end: result.EndDate,
+                                start: result.fAllDayEvent ? this.formatStartDate(result.EventDate) : result.EventDate,
+                                end: result.fAllDayEvent ? this.formatEndDate(result.EndDate) : result.EndDate,
                                 allDay: result.fAllDayEvent,
                                 recurr: result.fRecurrence,
                                 recurrData: result.RecurrenceData,
-                                //rrule: this.parseRecurrentEvent(result.RecurrenceData, result.EventDate, result.EndDate),
-                                rrule: result.fRecurrence ? this.parseRecurrentEvent(result.RecurrenceData, result.EventDate, result.EndDate) : null
+                                rrule: result.fRecurrence ? this.parseRecurrentEvent(result.RecurrenceData, this.formatStartDate(result.EventDate), this.formatEndDate(result.EndDate)) : null
                             })
                         })
                         resolve(calEvents);
@@ -46,7 +49,6 @@ export class CalendarOperations{
                 })
         })
     }
-
 
     public displayCalendars(context: WebPartContext , calSettingsListName:string): Promise <{}[]>{
         const eventSources : {}[] = []; var eventSrc  : {} ;
@@ -90,58 +92,148 @@ export class CalendarOperations{
 
     public parseRecurrentEvent(recurrXML:string, startDate:string, endDate:string) : {}{
         let rruleObj  
-                : {dtstart:string, until:string, count:number, interval:number, freq:string, bymonth:number[], bymonthday:string, byweekday:{}[]} 
-                = {dtstart:startDate, until:endDate, count:null, interval:1, freq:null, bymonth:null, bymonthday:null, byweekday:null}, 
-            weekDay :[] = [], $recurrFreq:any, $repeatInstances:any, isRepeatForever:string, firstDayOfWeek:string;
+                : {dtstart:string, until:string, count:number, interval:number, freq:string, bymonth:number[], bymonthday:number[], byweekday:{}[], bysetpos:number[]} 
+                = {dtstart:startDate, until:endDate, count:null, interval:1, freq:null, bymonth:null, bymonthday:null, byweekday:null, bysetpos:null};
 
         if (recurrXML.indexOf("<recurrence>") != -1) {
             let $recurrTag : HTMLElement = document.createElement("div");
             $recurrTag.innerHTML = recurrXML;
 
-            console.log($recurrTag)
+            //console.log($recurrTag)
 
             switch (true) {
+                //yearly
                 case ($recurrTag.getElementsByTagName('yearly').length != 0):                
+                    let $yearlyTag = $recurrTag.getElementsByTagName('yearly')[0];
                     rruleObj.freq = "yearly";        
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('yearly')[0].getAttribute('yearfrequency'));
+                    rruleObj.interval = parseInt($yearlyTag.getAttribute('yearfrequency'));
+                    rruleObj.bymonth = [parseInt($yearlyTag.getAttribute('month'))];
+                    rruleObj.bymonthday = [parseInt($yearlyTag.getAttribute('day'))];
                     break;
+
+                //yearly by day
                 case ($recurrTag.getElementsByTagName('yearlybyday').length != 0):
+                    let $yearlybydayTag = $recurrTag.getElementsByTagName('yearlybyday')[0];
                     rruleObj.freq = "yearly";
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('yearlybyday')[0].getAttribute('yearfrequency'));
+                    rruleObj.interval = parseInt($yearlybydayTag.getAttribute('yearfrequency'));
+                    rruleObj.bymonth = [parseInt($yearlybydayTag.getAttribute('month'))];
+
+                    //attribute mo=TRUE or su=TRUE etc.
+                    if ($yearlybydayTag.getAttribute('mo') || 
+                        $yearlybydayTag.getAttribute('tu') ||
+                        $yearlybydayTag.getAttribute('we') ||
+                        $yearlybydayTag.getAttribute('th') ||
+                        $yearlybydayTag.getAttribute('fr')){
+                            rruleObj.byweekday = [{
+                                weekday: this.getWeekDay(this.getElemAttrs($yearlybydayTag)), 
+                                n: this.getDayOrder($yearlybydayTag.getAttribute('weekdayofmonth'))
+                            }]; 
+                        }
+                    
+                    //attribute day=TRUE
+                    if($yearlybydayTag.getAttribute('day')){
+                        rruleObj.bymonthday = [this.getDayOrder($yearlybydayTag.getAttribute('weekdayofmonth'))];
+                    }
+
+                    //attribute weekday=TRUE
+                    if($yearlybydayTag.getAttribute('weekday')){
+                        rruleObj.bysetpos = [this.getDayOrder($yearlybydayTag.getAttribute('weekdayofmonth'))];
+                        rruleObj.byweekday = [0,1,2,3,4]; 
+                    }
+
+                    //attribute weekend_day=TRUE
+                    if($yearlybydayTag.getAttribute('weekend_day')){
+                        rruleObj.bysetpos = [this.getDayOrder($yearlybydayTag.getAttribute('weekdayofmonth'))];
+                        rruleObj.byweekday = [5,6]; 
+                    }
                     break;
+
+                //monthly
                 case ($recurrTag.getElementsByTagName('monthly').length != 0):
+                    let $monthlyTag = $recurrTag.getElementsByTagName('monthly')[0];
                     rruleObj.freq = "monthly";
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('monthly')[0].getAttribute('monthfrequency'));
+                    rruleObj.interval = parseInt($monthlyTag.getAttribute('monthfrequency'));
+                    rruleObj.bymonthday = $monthlyTag.getAttribute('day') ? [parseInt($monthlyTag.getAttribute('day'))]: null;
                     break;
+
+                //monthly by day
                 case ($recurrTag.getElementsByTagName('monthlybyday').length != 0):
+                    let $monthlybydayTag = $recurrTag.getElementsByTagName('monthlybyday')[0];
                     rruleObj.freq = "monthly";
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('monthlybyday')[0].getAttribute('monthfrequency'));
-                    rruleObj.byweekday = [{
-                        weekday: this.getWeekDay(this.getElemAttrs($recurrTag.getElementsByTagName('monthlybyday')[0])), 
-                        n: this.getDayOrder($recurrTag.getElementsByTagName('monthlybyday')[0].getAttribute('weekdayofmonth'))
-                    }] ;
+                    rruleObj.interval = parseInt($monthlybydayTag.getAttribute('monthfrequency'));
+                    
+                    //attribute mo=TRUE or su=TRUE etc.
+                    if ($monthlybydayTag.getAttribute('mo') || 
+                        $monthlybydayTag.getAttribute('tu') ||
+                        $monthlybydayTag.getAttribute('we') ||
+                        $monthlybydayTag.getAttribute('th') ||
+                        $monthlybydayTag.getAttribute('fr')){
+                            rruleObj.byweekday = [{
+                                weekday: this.getWeekDay(this.getElemAttrs($monthlybydayTag)), 
+                                n: this.getDayOrder($monthlybydayTag.getAttribute('weekdayofmonth'))
+                            }]; 
+                        }
+
+                    //attribute day=TRUE
+                    if($monthlybydayTag.getAttribute('day'))
+                        rruleObj.bymonthday = [this.getDayOrder($monthlybydayTag.getAttribute('weekdayofmonth'))];
+                    
+                    //attribute weekday=TRUE
+                    if($monthlybydayTag.getAttribute('weekday')){
+                        rruleObj.bysetpos = [this.getDayOrder($monthlybydayTag.getAttribute('weekdayofmonth'))];
+                        rruleObj.byweekday = [0,1,2,3,4]; 
+                    }
+
+                    //attribute weekend_day=TRUE
+                    if($monthlybydayTag.getAttribute('weekend_day')){
+                        rruleObj.bysetpos = [this.getDayOrder($monthlybydayTag.getAttribute('weekdayofmonth'))];
+                        rruleObj.byweekday = [5,6]; 
+                    }
                     break;
+
+                //weekly
                 case ($recurrTag.getElementsByTagName('weekly').length != 0):
+                    let $weeklyTag = $recurrTag.getElementsByTagName('weekly')[0];
                     rruleObj.freq = "weekly";
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('weekly')[0].getAttribute('weekfrequency'));
-                    rruleObj.byweekday = this.getWeekDays(this.getElemAttrs($recurrTag.getElementsByTagName('weekly')[0]));
+                    rruleObj.interval = parseInt($weeklyTag.getAttribute('weekfrequency'));
+                    rruleObj.byweekday = this.getWeekDays(this.getElemAttrs($weeklyTag));
                     break;
+
+                //daily
                 case ($recurrTag.getElementsByTagName('daily').length != 0):
+                    let $dailyTag = $recurrTag.getElementsByTagName('daily')[0];
                     rruleObj.freq = "daily";
-                    rruleObj.interval = parseInt($recurrTag.getElementsByTagName('daily')[0].getAttribute('dayfrequency'));
+                    rruleObj.interval = $dailyTag.getAttribute('dayfrequency') ? parseInt($dailyTag.getAttribute('dayfrequency')): 1;
+                    rruleObj.byweekday = this.getWeekDays(this.getElemAttrs($dailyTag));
                     break;
             }
 
             if ($recurrTag.getElementsByTagName('repeatInstances').length != 0)
                 rruleObj.count = parseInt($recurrTag.getElementsByTagName('repeatInstances')[0].innerHTML);
-
             
-            console.log("rruleObj", rruleObj);
+            //console.log("rruleObj", rruleObj);
 
-            //return rruleObj;
-            return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 }
+            return rruleObj;
+            //return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 }
 
         } else return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 }
+    }
+
+    public formateDate (ipDate:any) :any{
+        return moment.utc(ipDate).format('YYYY-MM-DD hh:mm A'); 
+    }
+    public formatStartDate (ipDate:any) : any{
+        let startDateMod = new Date(ipDate);
+        startDateMod.setTime(startDateMod.getTime());
+        
+        return moment.utc(startDateMod).format('YYYY-MM-DD') + "T" + moment.utc(startDateMod).format("hh:mm") + ":00Z";
+    }
+    public formatEndDate (ipDate:any) :any {
+        let endDateMod = new Date(ipDate);
+        endDateMod.setTime(endDateMod.getTime());
+
+        let nextDay = moment(endDateMod).add(1, 'days');
+        return moment.utc(nextDay).format('YYYY-MM-DD') + "T" + moment.utc(nextDay).format("hh:mm") + ":00Z";
     }
 
     public getElemAttrs(el:any) :string[]{
@@ -183,7 +275,7 @@ export class CalendarOperations{
     }
 
     public getWeekDays (tagAttrs:string[]) : number[]{
-        let weekDay:number,
+        let weekDay:number = -1,
             weekDays: number[] = [];
         for(let i=0; i<tagAttrs.length; i++){
             switch (tagAttrs[i]) {
@@ -208,8 +300,12 @@ export class CalendarOperations{
                 case ('su'):
                     weekDay = 6;
                     break;
+                case ('weekday'):
+                    weekDays = [0, 1, 2, 3, 4];
+                    break;
             }
-            weekDays.push(weekDay);
+            if(weekDay != -1)
+                weekDays.push(weekDay);
         }
         return weekDays;
     }
