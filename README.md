@@ -42,16 +42,4 @@ gulp bundle --ship
 gulp package-solution --ship
 
 
-References/Issues
-------------------
-- https://github.com/SharePoint/sp-dev-docs/issues/2473
-- https://docs.microsoft.com/en-us/sharepoint/dev/spfx/connect-to-anonymous-apis
-- https://docs.microsoft.com/en-us/sharepoint/dev/spfx/use-msgraph 
-- https://github.com/pnp/pnpjs/issues/502
-- https://tahoeninjas.blog/2019/02/05/getting-around-cors-issues-in-spfx-with-sphttpclient/
-- https://github.com/SharePoint/sp-dev-docs/issues/3086
-- https://docs.rencore.com/spcaf/v7/SPF010802_DontUseHttpClientToConnectToSharePoint.html
-- https://levelup.gitconnected.com/all-possible-ways-of-making-an-api-call-in-plain-javascript-c0dee3c11b8b
-- https://davehaxblog.wordpress.com/2017/05/22/using-fetch-with-sharepoint-online/
-
 
