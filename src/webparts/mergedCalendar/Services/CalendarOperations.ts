@@ -1,5 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse, HttpClient, IHttpClientOptions} from "@microsoft/sp-http";
+import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
 import * as moment from 'moment';
 
 export class CalendarOperations{
@@ -34,7 +34,6 @@ export class CalendarOperations{
                 },err => reject(err));
         });
     }
-
     public getExtSchool(context:WebPartContext){
 
         //working :)
@@ -123,23 +122,56 @@ export class CalendarOperations{
 
         switch (calType){
             case "Internal":
+            case "Rotary":
                 resolvedCalUrl = calUrl + restApiUrl + restApiParams;
                 break;
             case "My School":
                 resolvedCalUrl = context.pageContext.web.absoluteUrl + restApiUrl + restApiParams;
                 break;
-            case "Rotary":
-                break;
             case "External":
                 resolvedCalUrl = azurePeelSchoolsUrl + calUrl.substring(calUrl.indexOf('.org/') + 4, calUrl.length) + restApiUrl + restApiParams;
-                break;
-            case "Graph":
                 break;
         }
         return resolvedCalUrl;
     }
 
     public getCalsData(context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]>{
+        if(calSettings.CalType == 'Graph'){
+            return this.getGraphCals(context, calSettings);
+        }else{
+            return this.getDefaultCals(context, calSettings);
+        }
+    }
+
+    public getGraphCals(context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> {
+        
+        let graphUrl :string = calSettings.CalURL.substring(32, calSettings.CalURL.length),
+            calEvents : {}[] = [];
+
+        return new Promise <{}[]> (async(resolve, reject)=>{
+            context.msGraphClientFactory
+                .getClient()
+                .then((client :MSGraphClient)=>{
+                    client
+                        .api(graphUrl)
+                        .get((error, response: any, rawResponse?: any)=>{
+                            response.value.map((result:any)=>{
+                                calEvents.push({
+                                    id: result.id,
+                                    title: result.subject,
+                                    start: this.formatStartDate(result.start.dateTime),
+                                    end: this.formatStartDate(result.end.dateTime),
+                                    _location: result.location.displayName,
+                                    _body: result.body.content
+                                })
+                            })
+                            resolve(calEvents);
+                        })
+                })
+        })
+    }
+
+    public getDefaultCals(context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]>{
         
         let calUrl :string = this.resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
             calEvents : {}[] = [] ;
@@ -192,31 +224,13 @@ export class CalendarOperations{
                             textColor: this.getColorHex(setting.FgColor)
                         }
                         eventSources.push(eventSrc);
-                        //console.log("Pushed data for event source: " + setting.CalName);
                     });
                 }
             });
             await Promise.all(dataFetches);
-            //console.log("Total event sources fetched", eventSources.length);
             // The next then takes the eventSources array and it becomes the return value.
             // Its a one-liner so `return` is implicitly known here
         }).then(() => eventSources)
-        
-        /*return new Promise <{}[]> (async(resolve, reject) =>{
-            this.getCalSettings(context, calSettingsListName).then((settings:any)=>{
-                for (let i=0; i<settings.length; i++){     
-                    this.getCalsData(context, settings[i].CalName).then((events:any)=>{
-                        eventSrc = {
-                            events: events,
-                            color: settings[i].BgColor,
-                            textColor: settings[i].FgColor
-                        }
-                        eventSources.push(eventSrc);
-                    })
-                }
-                resolve(eventSources);
-            })
-        })*/
     }
 
     public parseRecurrentEvent(recurrXML:string, startDate:string, endDate:string) : {}{

@@ -26,14 +26,9 @@ export default class MergedCalendar extends React.Component<IMergedCalendarProps
   }
 
   public componentDidMount(){
-
     this._calendarOps.displayCalendars(this.props.context, this.state.calSettingsList).then((result:{}[])=>{
       this.setState({eventSources: result});
     });
-
-    //this._calendarOps.getExt(this.props.context);
-    //this._calendarOps.getExtSchool(this.props.context);
-    
   }
 
   public handleDateClick = (arg:any)=>{
