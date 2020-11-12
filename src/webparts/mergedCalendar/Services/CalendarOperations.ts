@@ -1,5 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse, HttpClient} from "@microsoft/sp-http";
+import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, AadHttpClient, HttpClientResponse, HttpClient, IHttpClientOptions} from "@microsoft/sp-http";
 import * as moment from 'moment';
 
 export class CalendarOperations{
@@ -35,7 +35,21 @@ export class CalendarOperations{
         });
     }
 
-    public getExtSchool(context:WebPartContext):any{
+    public getExtSchool(context:WebPartContext){
+
+        //working :)
+        /*const options = {
+            headers : { 
+                'Accept': 'application/json;odata=verbose'
+            }
+        }
+        fetch("https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", options).then((response)=>{
+            response.json().then((data)=>{
+                console.log(data)
+            })
+            
+        })*/
+        
         /*context.aadHttpClientFactory
             .getClient("https://pdsb1.azure-api.net")
             .then((client: AadHttpClient):void =>{
@@ -48,17 +62,41 @@ export class CalendarOperations{
                             console.log(results);
                         })
                     })
-            })*/
-        
+        })*/
 
+        //https://schools.peelschools.org/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items
+        //https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items
+
+        //working :)
+        /*const options:IHttpClientOptions = {
+            headers : { 
+                'Accept': 'application/json;odata=verbose'
+            }
+        }
         context.httpClient
-            .get("https://schools.peelschools.org/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", HttpClient.configurations.v1)
+            .get("https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", HttpClient.configurations.v1, options)
             .then((res: HttpClientResponse): Promise<any> => {
-                return res.json();
-            })
-            .then((response: any): void => {
-                console.log(response);
-            });
+                return res.json().then((results:any)=>{
+                    console.log(results)
+                });
+        })*/
+
+        /*const requestHeaders: Headers = new Headers();
+        requestHeaders.append('Accept', 'application/json;odata=verbose');
+        const options:ISPHttpClientOptions = {
+            headers : requestHeaders,
+        }
+        return new Promise<any>(async(resolve, reject)=>{
+            context.spHttpClient
+                .get("https://pdsb1.azure-api.net/peelschools/sec/johnfraser/_api/web/lists/getByTitle('Calendar')/items", SPHttpClient.configurations.v1, options)
+                .then((response: SPHttpClientResponse)=>{
+                    response.json().then((results:any)=>{
+                        console.log(results);
+                        resolve(results);
+                    })
+                })
+        })*/
+
     }
 
     public getCalSettings(context:WebPartContext, listName: string) : Promise <{}[]>{
@@ -106,19 +144,18 @@ export class CalendarOperations{
         let calUrl :string = this.resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
             calEvents : {}[] = [] ;
 
-        const myOptions: ISPHttpClientOptions = {
-            headers: new Headers(),
-            method: 'GET',
-            mode: 'cors'
-            
+        const myOptions: IHttpClientOptions = {
+            headers : { 
+                'Accept': 'application/json;odata=verbose'
+            }
         };
 
         return new Promise <{}[]> (async(resolve, reject) =>{
-            context.spHttpClient
-                .get(calUrl, SPHttpClient.configurations.v1, myOptions)
-                .then((response: SPHttpClientResponse)=>{
-                    response.json().then((results:any)=>{
-                        results.value.map((result:any)=>{
+            context.httpClient
+                .get(calUrl, HttpClient.configurations.v1, myOptions)
+                .then((response: HttpClientResponse) =>{
+                   response.json().then((results:any)=>{
+                        results.d.results.map((result:any)=>{
                             calEvents.push({
                                 id: result.ID,
                                 title: result.Title,
@@ -137,6 +174,7 @@ export class CalendarOperations{
                     console.log(error);
                 })
         })
+        
     }
 
     public displayCalendars(context: WebPartContext , calSettingsListName:string): Promise <{}[]>{
