@@ -12,6 +12,8 @@
     "test": "gulp test"
   },
   "dependencies": {
+    "@fluentui/react": "^7.150.0",
+    "@fluentui/react-hooks": "^8.0.0-beta.0",
     "@fullcalendar/core": "^5.3.1",
     "@fullcalendar/daygrid": "^5.3.2",
     "@fullcalendar/interaction": "^5.3.1",
@@ -23,6 +25,7 @@
     "@microsoft/sp-office-ui-fabric-core": "1.11.0",
     "@microsoft/sp-property-pane": "1.11.0",
     "@microsoft/sp-webpart-base": "1.11.0",
+    "@uifabric/react-hooks": "^7.13.9",
     "moment": "^2.29.1",
     "office-ui-fabric-react": "6.214.0",
     "react": "16.8.5",

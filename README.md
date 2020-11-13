@@ -31,6 +31,10 @@ npm install --save @fullcalendar/react @fullcalendar/rrule @fullcalendar/daygrid
 
 npm install moment
 
+npm install @fluentui/react
+
+npm install @fluentui/react-hooks
+
 
 gulp package-solution
 

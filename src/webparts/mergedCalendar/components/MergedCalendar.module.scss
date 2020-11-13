@@ -1,5 +1,14 @@
 @import '~office-ui-fabric-react/dist/sass/References.scss';
 
+
+.calendarPanel{
+  
+}
+
+.marginR10{
+  margin-right: 10px;
+}
+
 .mergedCalendar {
   .container {
     max-width: 700px;
@@ -71,4 +80,14 @@
       display: inline-block;
     }
   }
+
+  .settingsBtn{
+    float: right;
+    margin-bottom: 15px;
+  }
+
+  .calendarCntnr{
+    clear: both;
+  }
+  
 }

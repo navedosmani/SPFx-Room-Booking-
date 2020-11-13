@@ -26,7 +26,10 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
       {
         description: this.properties.description,
         showWeekends: this.properties.showWeekends,
-        context: this.context
+        context: this.context,
+        eventSources: [],
+        calSettings: [],
+        calSettingsList: "CalendarSettings"
       }
     );
 
