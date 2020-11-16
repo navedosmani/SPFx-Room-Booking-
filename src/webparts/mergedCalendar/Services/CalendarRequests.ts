@@ -5,22 +5,6 @@ import {formatStartDate, formatEndDate} from '../Services/EventFormat';
 import {parseRecurrentEvent} from '../Services/RecurrentEventOps';
 
 
-export const getCalSettings = (context:WebPartContext, listName: string) : Promise <{}[]> => {
-    let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items" ;
-    var calSettings : {}[] = [];
-
-    return new Promise <{}[]> (async(resolve, reject)=>{
-        context.spHttpClient
-            .get(restApiUrl, SPHttpClient.configurations.v1)
-            .then((response: SPHttpClientResponse)=>{
-                response.json().then((results:any)=>{
-                    calSettings = results.value;
-                    resolve(calSettings);
-                })
-            })
-    })
-}
-
 export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
     if(calSettings.CalType == 'Graph'){
         return getGraphCals(context, calSettings);
@@ -33,7 +17,10 @@ const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, c
     let resolvedCalUrl:string,
         azurePeelSchoolsUrl :string = "https://pdsb1.azure-api.net/peelschools",
         restApiUrl :string = "/_api/web/lists/getByTitle('"+calName+"')/items",
-        restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=1000";
+        //restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'";
+        restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=300";
+
+    //$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'
 
     switch (calType){
         case "Internal":
