@@ -13,36 +13,7 @@
 }
 
 
-
 .mergedCalendar {
-
-  .calendarLegend{
-    background: transparent;
-    li{
-      list-style-type: none;
-    }
-    .legendBullet{
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      margin-right: 5px;
-      border-radius: 2px;
-    }
-    .legendText{
-      margin-left: 2px;
-    }
-
-    li span [class^="legendBullet"]{
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      margin-right: 5px;
-      border-radius: 2px;
-    }
-    
-
-    
-  }
 
   .container {
     max-width: 700px;
@@ -124,8 +95,25 @@
     clear: both;
   }
 
-  
-
+  .calendarLegend{
+    ul{
+      padding: 0 5px;
+    }
+    li{
+      list-style-type: none;
+    }
+    .legendBullet{
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      margin-right: 5px;
+      border-radius: 2px;
+    }
+    .legendText{
+      margin-left: 2px;
+    }
+  }
   
 }
+
 
