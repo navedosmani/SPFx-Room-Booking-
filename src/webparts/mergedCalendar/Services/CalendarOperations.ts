@@ -20,8 +20,8 @@ export class CalendarOperations{
                     return getCalsData(context, setting).then((events: any) => {
                         const eventSrc = {
                             events: events,
-                            color: setting.BgColor,
-                            textColor: setting.FgColor
+                            color: setting.BgColorHex,
+                            textColor: setting.FgColorHex
                         }
                         eventSources.push(eventSrc);
                     });

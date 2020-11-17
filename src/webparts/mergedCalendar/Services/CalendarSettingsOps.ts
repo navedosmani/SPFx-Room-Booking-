@@ -15,11 +15,13 @@ export const getCalSettings = (context:WebPartContext, listName: string) : Promi
                 response.json().then((results:any)=>{
                     results.value.map((result:any)=>{
                         calSettings.push({
-                            BgColor : getColorHex(result.BgColor),
+                            BgColor: result.BgColor,
+                            BgColorHex : getColorHex(result.BgColor),
                             CalName : result.CalName,
                             CalType: result.CalType,
                             CalURL: result.CalURL,
-                            FgColor: getColorHex(result.FgColor),
+                            FgColor: result.FgColor,
+                            FgColorHex: getColorHex(result.FgColor),
                             Id: result.Id,
                             ShowCal: result.ShowCal,
                             Title: result.Title,
