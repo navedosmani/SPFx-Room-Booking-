@@ -16,6 +16,8 @@ import {useBoolean} from '@fluentui/react-hooks';
 import {CalendarOperations} from '../Services/CalendarOperations';
 import {getCalSettings, updateCalSettings} from '../Services/CalendarSettingsOps';
 
+import CalendarLegend from './CalendarLegend';
+
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
   const _calendarOps = new CalendarOperations();
@@ -71,7 +73,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   return(
     <div className={styles.mergedCalendar}>
       <h1>Testing FullCalendar with React</h1>
-      <p>{escape(props.description)}</p>
+      <p>{escape(props.description)}</p>      
 
       <DefaultButton text="Calendar Settings" onClick={openPanel} className={styles.settingsBtn} />
       <Panel
@@ -119,6 +121,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           eventSources = {eventSources}
         />
       </div> 
+
+      <CalendarLegend calSettings={calSettings}></CalendarLegend>
 
     </div>
   );
