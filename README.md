@@ -21,6 +21,8 @@ Milestones
 - FullCalendar Recurrent events parsing
 - Reading external calendars from Azure API using HttpClient and not SPHttpClient
 - Reading Graph calendars and modifying permissions
+- Implementing the Settings panel using Fluent UI
+- Implementing the Legend component
 
 
 Terminal Commands
