@@ -1,7 +1,7 @@
 define([], function() {
   return {
-    "PropertyPaneDescription": "Description",
-    "BasicGroupName": "Group Name",
+    "PropertyPaneDescription": "Peel Schools Aggregated Calendar",
+    "BasicGroupName": "Settings",
     "DescriptionFieldLabel": "Description Field"
   }
 });
