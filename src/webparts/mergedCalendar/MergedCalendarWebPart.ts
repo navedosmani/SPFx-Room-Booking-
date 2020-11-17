@@ -65,9 +65,9 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
             {
               groupName: strings.BasicGroupName,
               groupFields: [
-                PropertyPaneTextField('description', {
+                /*PropertyPaneTextField('description', {
                   label: strings.DescriptionFieldLabel
-                }),
+                }),*/
                 PropertyPaneCheckbox('showWeekends', {
                   text: "Show Weekends",
                   checked : true,
