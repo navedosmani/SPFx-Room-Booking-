@@ -1,11 +1,12 @@
 import * as React from 'react';
 import './legend.scss';
-import { CalendarLegendProps } from './CalendarLegendProps';
+import styles from '../MergedCalendar.module.scss';
+import { LegendProps } from './LegendProps';
 
-export default function CalendarLegend(props:CalendarLegendProps){
+export default function Legend(props:LegendProps){
     
     return(
-        <div className="calendarLegend">
+        <div className={styles.calendarLegend}>
             <ul>
             {
                 props.calSettings.map((value:any, index)=>{
@@ -14,8 +15,8 @@ export default function CalendarLegend(props:CalendarLegendProps){
                         <li key={index}>
                             {value.ShowCal &&
                                 <div>
-                                    <span className={'legendBullet bg'+value.BgColor}></span>
-                                    <span className="legendText">{value.Title}</span>
+                                    <span className={styles.legendBullet +' calLegend_'+value.BgColor}></span>
+                                    <span className={styles.legendText}>{value.Title}</span>
                                 </div>
                             }
                         </li>
