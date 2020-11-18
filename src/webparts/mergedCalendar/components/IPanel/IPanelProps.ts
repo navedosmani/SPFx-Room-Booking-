@@ -1,13 +1,10 @@
-import { WebPartContext } from "@microsoft/sp-webpart-base";
 import {IDropdownOption} from "@fluentui/react"
 
-export interface CalendarProps{
-    showWeekends: boolean;
-    context: WebPartContext;  
-    calSettingsList: string;
+export interface IPanelProps{
     dpdOptions: IDropdownOption[];
-    eventSources: {}[];
     calSettings: {}[];
+    isOpen: boolean;
+    dismissPanel: any;
     onChkChange: (calSettings:{}) => ((ev: any, checked: boolean)=>void);
     onDpdChange: (calSettings:{}) => ((ev: any, item: IDropdownOption)=>void);
 }

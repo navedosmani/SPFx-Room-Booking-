@@ -1,5 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {IDropdownOption} from "@fluentui/react"
+import {IDropdownOption} from "@fluentui/react";
 
 export interface IMergedCalendarProps {
   description: string;

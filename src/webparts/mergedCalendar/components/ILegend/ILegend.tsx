@@ -1,9 +1,9 @@
 import * as React from 'react';
 import './legend.scss';
 import styles from '../MergedCalendar.module.scss';
-import { LegendProps } from './LegendProps';
+import { ILegendProps } from './ILegendProps';
 
-export default function Legend(props:LegendProps){
+export default function ILegend(props:ILegendProps){
     
     return(
         <div className={styles.calendarLegend}>
