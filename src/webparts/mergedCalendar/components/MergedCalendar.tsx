@@ -3,19 +3,24 @@ import styles from './MergedCalendar.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption} from '@fluentui/react';
+import {IDropdownOption, DefaultButton} from '@fluentui/react';
+import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
 import {getCalSettings, updateCalSettings} from '../Services/CalendarSettingsOps';
 
-import Calendar from './Calendar/Calendar';
-import Legend from './Legend/Legend';
+import ICalendar from './ICalendar/ICalendar';
+import IPanel from './IPanel/IPanel';
+import ILegend from './ILegend/ILegend';
+import IDialog from './IDialog/IDialog';
 
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
   const _calendarOps = new CalendarOperations();
   const [eventSources, setEventSources] = React.useState([]);
   const [calSettings, setCalSettings] = React.useState([]);
+  const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
+  const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
@@ -44,20 +49,35 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       })
      }
   }
+  const handleDateClick = (arg:any) =>{
+    // alert(arg.dateStr);
+    toggleHideDialog();
+  }
+
 
   return(
     <div className={styles.mergedCalendar}>
 
-      <Calendar eventSources={eventSources} 
+      <ICalendar 
+        eventSources={eventSources} 
         showWeekends={props.showWeekends} 
-        calSettingsList={props.calSettingsList} 
-        context={props.context} 
-        dpdOptions={props.dpdOptions}
+        calSettings={calSettings}
+        openPanel={openPanel}
+        handleDateClick={handleDateClick}/>
+
+      <IPanel
+        dpdOptions={props.dpdOptions} 
         calSettings={calSettings}
         onChkChange={chkHandleChange}
-        onDpdChange={dpdHandleChange}/>
+        onDpdChange={dpdHandleChange}
+        isOpen = {isOpen}
+        dismissPanel = {dismissPanel}/>
 
-      <Legend calSettings={calSettings}></Legend>
+      <ILegend calSettings={calSettings} />
+
+      <IDialog 
+        hideDialog={hideDialog} 
+        toggleHideDialog={toggleHideDialog} />
 
     </div>
   );
