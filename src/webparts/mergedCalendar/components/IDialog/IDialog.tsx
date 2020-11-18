@@ -7,27 +7,32 @@ import IEventDetails from  '../IEventDetails/IEventDetails';
 export default function IDialog(props:IDialogProps){
     const modelProps = {
         isBlocking: false,
-        styles: { main: { maxWidth: 450 } },
+        //styles: { main: { minWidth: '30%' } },
       };
       const dialogContentProps = {
         type: DialogType.largeHeader,
         title: 'Event Details',
         subText: '',
       };
-
+  
       return (
         <>
           <Dialog
             hidden={props.hideDialog}
             onDismiss={props.toggleHideDialog}
             dialogContentProps={dialogContentProps}
-            modalProps={modelProps}>
+            modalProps={modelProps}
+            minWidth="30%" >
 
             <IEventDetails 
-                Title={props.evDetails.title} 
-                // Location={props.evDetails.extendedProps._location} />
-                Location={props.evDetails.location} />
-
+                Title ={props.evDetails1.title} 
+                Start ={props.evDetails1.startStr}
+                End = {props.evDetails1.endStr}
+                AllDay = {props.evDetails2.allDay}
+                Body = {props.evDetails3._body}
+                Location = {props.evDetails3._location}
+                Recurrence = {props.evDetails3.recurrData}
+            />
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />
             </DialogFooter>
