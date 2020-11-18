@@ -1,5 +1,5 @@
 import * as React from 'react';
-import './legend.scss';
+import './ILegend.scss';
 import styles from '../MergedCalendar.module.scss';
 import { ILegendProps } from './ILegendProps';
 
