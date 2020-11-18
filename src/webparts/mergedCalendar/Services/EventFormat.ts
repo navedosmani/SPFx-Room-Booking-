@@ -20,4 +20,11 @@ export const formatEndDate = (ipDate:any) :any => {
     return moment.utc(nextDay).format('YYYY-MM-DD') + "T" + moment.utc(nextDay).format("hh:mm") + ":00Z";
 }
 
+export const formatStrHtml = (str: string) : any => {
+    let parser = new DOMParser();
+    let htmlEl = parser.parseFromString(str, 'text/html');
+    console.log(htmlEl.body)
+    return htmlEl.body;
+}
+
 
