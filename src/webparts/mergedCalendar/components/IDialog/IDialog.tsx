@@ -2,6 +2,7 @@ import * as React from 'react';
 import {Dialog, DialogType, DialogFooter, DefaultButton} from '@fluentui/react';
 
 import {IDialogProps} from './IDialogProps';
+import IEventDetails from  '../IEventDetails/IEventDetails';
 
 export default function IDialog(props:IDialogProps){
     const modelProps = {
@@ -10,8 +11,8 @@ export default function IDialog(props:IDialogProps){
       };
       const dialogContentProps = {
         type: DialogType.largeHeader,
-        title: 'All emails together',
-        subText: 'Your Inbox has changed. No longer does it include favorites, it is a singular destination for your emails.',
+        title: 'Event Details',
+        subText: '',
       };
 
       return (
@@ -21,6 +22,12 @@ export default function IDialog(props:IDialogProps){
             onDismiss={props.toggleHideDialog}
             dialogContentProps={dialogContentProps}
             modalProps={modelProps}>
+
+            <IEventDetails 
+                Title={props.evDetails.title} 
+                // Location={props.evDetails.extendedProps._location} />
+                Location={props.evDetails.location} />
+
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />
             </DialogFooter>
