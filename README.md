@@ -37,6 +37,8 @@ npm install @fluentui/react
 
 npm install @fluentui/react-hooks
 
+npm install office-ui-fabric-core
+
 
 gulp package-solution
 
