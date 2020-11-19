@@ -1,5 +1,52 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
+import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions} from "@microsoft/sp-http";
+
+
+const getColorHex = (colorName:string) : string => {
+    let colorHex : string;
+    switch (colorName) {
+        case ("Black"):
+            colorHex = "#000000";
+            break;
+        case ("Blue"):
+            colorHex = "#0096CF";
+            break;
+        case ("Green"):
+            colorHex = "#27AE60";
+            break;
+        case ("Grey"):
+            colorHex = "#9FA7A7";
+            break;
+        case ("Mint"):
+            colorHex = "#1C9A82";
+            break;
+        case ("Navy"):
+            colorHex = "#4C5F79";
+            break;
+        case ("Orange"):
+            colorHex = "#EA8020";
+            break;
+        case ("Pink"):
+            colorHex = "#F46C9E";
+            break;
+        case ("Purple"):
+            colorHex = "#A061BA";
+            break;
+        case ("Red"):
+            colorHex = "#D7574A";
+            break;
+        case ("Teal"):
+            colorHex = "#38A8AC";
+            break;
+        case ("White"):
+            colorHex = "#FFFFFF";
+            break;
+        case ("Yellow"):
+            colorHex = "#DAA62F";
+            break;
+    }
+    return colorHex;
+};
 
 export const getCalSettings = (context:WebPartContext, listName: string) : Promise <{}[]> => {
     
@@ -66,48 +113,3 @@ export const updateCalSettings = (context:WebPartContext, listName: string, calS
 };
 
 
-const getColorHex = (colorName:string) : string => {
-    let colorHex : string;
-    switch (colorName) {
-        case ("Black"):
-            colorHex = "#000000";
-            break;
-        case ("Blue"):
-            colorHex = "#0096CF";
-            break;
-        case ("Green"):
-            colorHex = "#27AE60";
-            break;
-        case ("Grey"):
-            colorHex = "#9FA7A7";
-            break;
-        case ("Mint"):
-            colorHex = "#1C9A82";
-            break;
-        case ("Navy"):
-            colorHex = "#4C5F79";
-            break;
-        case ("Orange"):
-            colorHex = "#EA8020";
-            break;
-        case ("Pink"):
-            colorHex = "#F46C9E";
-            break;
-        case ("Purple"):
-            colorHex = "#A061BA";
-            break;
-        case ("Red"):
-            colorHex = "#D7574A";
-            break;
-        case ("Teal"):
-            colorHex = "#38A8AC";
-            break;
-        case ("White"):
-            colorHex = "#FFFFFF";
-            break;
-        case ("Yellow"):
-            colorHex = "#DAA62F";
-            break;
-    }
-    return colorHex;
-};

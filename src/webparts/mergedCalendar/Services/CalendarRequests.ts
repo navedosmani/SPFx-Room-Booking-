@@ -1,17 +1,9 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
+import {HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
 
 import {formatStartDate, formatEndDate} from '../Services/EventFormat';
 import {parseRecurrentEvent} from '../Services/RecurrentEventOps';
 
-
-export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
-    if(calSettings.CalType == 'Graph'){
-        return getGraphCals(context, calSettings);
-    }else{
-        return getDefaultCals(context, calSettings);
-    }
-};
 
 const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, calName:string) : string => {
     let resolvedCalUrl:string,
@@ -19,7 +11,6 @@ const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, c
         restApiUrl :string = "/_api/web/lists/getByTitle('"+calName+"')/items",
         //restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'";
         restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=300";
-
     //$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'
 
     switch (calType){
@@ -103,4 +94,12 @@ const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Ti
             });
     });
     
+};
+
+export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
+    if(calSettings.CalType == 'Graph'){
+        return getGraphCals(context, calSettings);
+    }else{
+        return getDefaultCals(context, calSettings);
+    }
 };

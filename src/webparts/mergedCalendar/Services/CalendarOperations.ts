@@ -10,7 +10,8 @@ export class CalendarOperations{
         
         console.log("Display Calendar Function");
 
-        const eventSources : {}[] = []; var eventSrc  : {} ;
+        let eventSources : {}[] = [], 
+            eventSrc  : {} = {};
 
         // `async` is needed since we're using `await`
         return getCalSettings(context, calSettingsListName).then(async (settings:any) => {
@@ -18,7 +19,7 @@ export class CalendarOperations{
                 // This `return` is needed otherwise `undefined` is returned in this `map()` call.
                 if(setting.ShowCal){
                     return getCalsData(context, setting).then((events: any) => {
-                        const eventSrc = {
+                        eventSrc = {
                             events: events,
                             color: setting.BgColorHex,
                             textColor: setting.FgColorHex

@@ -1,9 +1,9 @@
 import * as React from 'react';
 import styles from './MergedCalendar.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+//import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton} from '@fluentui/react';
+import {IDropdownOption} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -33,18 +33,18 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
   },[eventSources.length]);
 
-  const chkHandleChange = (calSettings:{})=>{
+  const chkHandleChange = (newCalSettings:{})=>{
     return (ev: any, checked: boolean) => { 
-      updateCalSettings(props.context, props.calSettingsList, calSettings, checked).then(()=>{
+      updateCalSettings(props.context, props.calSettingsList, newCalSettings, checked).then(()=>{
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
         });
       });
      };
   };
-  const dpdHandleChange = (calSettings:any)=>{
+  const dpdHandleChange = (newCalSettings:any)=>{
     return (ev: any, item: IDropdownOption) => { 
-      updateCalSettings(props.context, props.calSettingsList, calSettings, calSettings.ShowCal, item.key).then(()=>{
+      updateCalSettings(props.context, props.calSettingsList, newCalSettings, newCalSettings.ShowCal, item.key).then(()=>{
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
         });
@@ -52,9 +52,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
      };
   };
   const handleDateClick = (arg:any) =>{
-    console.log(arg);
-    console.log(formatEvDetails(arg));
-
+    //console.log(arg);
+    //console.log(formatEvDetails(arg));
     setEventDetails(formatEvDetails(arg));
     toggleHideDialog();
   };
