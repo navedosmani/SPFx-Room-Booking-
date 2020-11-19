@@ -21,9 +21,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [calSettings, setCalSettings] = React.useState([]);
   const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
-  const [evDetails1, setEvDetails1] = React.useState({});
-  const [evDetails2, setEvDetails2] = React.useState({});
-  const [evDetails3, setEvDetails3] = React.useState({});
+  const [eventDetails, setEventDetails] = React.useState({
+    evInfo1 : [], evInfo2: [], evInfo3:[]
+  });
 
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
@@ -53,10 +53,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
      }
   }
   const handleDateClick = (arg:any) =>{
-    console.log(arg);
-    setEvDetails1(arg.event);
-    setEvDetails2(arg.event._def);
-    setEvDetails3(arg.event.extendedProps);
+    //console.log(arg);
+    setEventDetails({evInfo1: arg.event, evInfo2:arg.event._def, evInfo3:arg.event.extendedProps});
     toggleHideDialog();
   }
 
@@ -84,9 +82,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       <IDialog 
         hideDialog={hideDialog} 
         toggleHideDialog={toggleHideDialog}
-        evDetails1={evDetails1}
-        evDetails2={evDetails2} 
-        evDetails3={evDetails3}/>
+        eventDetails={eventDetails}/>
 
     </div>
   );
