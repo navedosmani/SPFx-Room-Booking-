@@ -8,6 +8,7 @@ import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
 import {getCalSettings, updateCalSettings} from '../Services/CalendarSettingsOps';
+import {formatEvDetails} from '../Services/EventFormat';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -21,9 +22,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [calSettings, setCalSettings] = React.useState([]);
   const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
-  const [eventDetails, setEventDetails] = React.useState({
-    evInfo1 : [], evInfo2: [], evInfo3:[]
-  });
+  const [eventDetails, setEventDetails] = React.useState({});
 
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
@@ -31,8 +30,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
     getCalSettings(props.context, props.calSettingsList).then((result:{}[])=>{
       setCalSettings(result);
-    })
-  },[eventSources.length])
+    });
+  },[eventSources.length]);
 
   const chkHandleChange = (calSettings:{})=>{
     return (ev: any, checked: boolean) => { 
@@ -40,23 +39,25 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
         });
-      })
-     }
-  }
+      });
+     };
+  };
   const dpdHandleChange = (calSettings:any)=>{
     return (ev: any, item: IDropdownOption) => { 
       updateCalSettings(props.context, props.calSettingsList, calSettings, calSettings.ShowCal, item.key).then(()=>{
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
         });
-      })
-     }
-  }
+      });
+     };
+  };
   const handleDateClick = (arg:any) =>{
-    //console.log(arg);
-    setEventDetails({evInfo1: arg.event, evInfo2:arg.event._def, evInfo3:arg.event.extendedProps});
+    console.log(arg);
+    console.log(formatEvDetails(arg));
+
+    setEventDetails(formatEvDetails(arg));
     toggleHideDialog();
-  }
+  };
 
 
   return(

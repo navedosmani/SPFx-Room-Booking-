@@ -6,8 +6,6 @@ import {formateDate} from '../../Services/EventFormat';
 
 export default function IEventDetails (props: IEventDetailsProps){
 
-   
-
     return(
         <div className={styles.eventDetails}>
 
@@ -17,12 +15,17 @@ export default function IEventDetails (props: IEventDetailsProps){
             </div>
             <div className={styles.evFld}>
                 <label className={styles.evLbl}>Start time</label>
-                <div className={styles.evIp}>{formateDate(props.Start)}</div>
+                <div className={styles.evIp}>
+                    {props.Start}
+                    {props.AllDay &&
+                        <i> (All Day Event)</i>
+                    }
+                </div>
             </div>
             {props.End && 
                 <div className={styles.evFld}>
                     <label className={styles.evLbl}>End Time</label>
-                    <div className={styles.evIp}>{formateDate(props.End)}</div>
+                    <div className={styles.evIp}>{props.End}</div>
                 </div>
             }
             {props.Location &&

@@ -25,13 +25,12 @@ export default function IDialog(props:IDialogProps){
             minWidth="35%" >
 
             <IEventDetails 
-                Title ={props.eventDetails.evInfo1.title} 
-                Start ={props.eventDetails.evInfo1.startStr}
-                End = {props.eventDetails.evInfo1.endStr}
-                AllDay = {props.eventDetails.evInfo2.allDay}
-                Body = {props.eventDetails.evInfo3._body}
-                Location = {props.eventDetails.evInfo3._location}
-                Recurrence = {props.eventDetails.evInfo3.recurrData}
+                Title ={props.eventDetails.Title} 
+                Start ={props.eventDetails.Start}
+                End = {props.eventDetails.End}
+                AllDay = {props.eventDetails.AllDay}
+                Body = {props.eventDetails.Body}
+                Location = {props.eventDetails.Location}                
             />
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />
