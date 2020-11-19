@@ -4,7 +4,7 @@ const getElemAttrs = (el:any) :string[] => {
         attributesArr.push(el.attributes[i].nodeName);
     }
     return attributesArr;
-}
+};
 
 const getWeekDay = (tagAttrs:string[]) : number => {
     let weekDay:number;
@@ -34,7 +34,7 @@ const getWeekDay = (tagAttrs:string[]) : number => {
         }
     }
     return weekDay;
-}
+};
 
 const getWeekDays = (tagAttrs:string[]) : number[] => {
     let weekDay:number = -1,
@@ -70,7 +70,7 @@ const getWeekDays = (tagAttrs:string[]) : number[] => {
             weekDays.push(weekDay);
     }
     return weekDays;
-}
+};
 
 const getDayOrder = (weekDayOfMonth:any):number => {
     let dayOrder:number;
@@ -92,7 +92,7 @@ const getDayOrder = (weekDayOfMonth:any):number => {
             break;
     }
     return dayOrder;
-}
+};
 
 
 export const parseRecurrentEvent = (recurrXML:string, startDate:string, endDate:string) : {} =>{
@@ -221,5 +221,5 @@ export const parseRecurrentEvent = (recurrXML:string, startDate:string, endDate:
         return rruleObj;
         //return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 }
 
-    } else return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 }
-}
+    } else return { dtstart: startDate, until: endDate, freq: "daily", interval: 1 };
+};

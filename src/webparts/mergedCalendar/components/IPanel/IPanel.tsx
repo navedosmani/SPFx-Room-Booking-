@@ -27,7 +27,7 @@ export default function IPanel (props:IPanelProps) {
                             <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
                         }
                         </div>
-                    )
+                    );
                     })}
                 </Stack>
 

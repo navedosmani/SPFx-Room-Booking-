@@ -1,4 +1,4 @@
-import {IDropdownOption} from "@fluentui/react"
+import {IDropdownOption} from "@fluentui/react";
 
 export interface IPanelProps{
     dpdOptions: IDropdownOption[];

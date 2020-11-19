@@ -8,7 +8,7 @@ export class CalendarOperations{
 
     public displayCalendars(context: WebPartContext , calSettingsListName:string): Promise <{}[]>{
         
-        console.log("Display Calendar Function")
+        console.log("Display Calendar Function");
 
         const eventSources : {}[] = []; var eventSrc  : {} ;
 
@@ -22,7 +22,7 @@ export class CalendarOperations{
                             events: events,
                             color: setting.BgColorHex,
                             textColor: setting.FgColorHex
-                        }
+                        };
                         eventSources.push(eventSrc);
                     });
                 }
@@ -31,7 +31,7 @@ export class CalendarOperations{
             
             // The next then takes the eventSources array and it becomes the return value.
             // Its a one-liner so `return` is implicitly known here
-        }).then(() => eventSources)
+        }).then(() => eventSources);
     }
 
    

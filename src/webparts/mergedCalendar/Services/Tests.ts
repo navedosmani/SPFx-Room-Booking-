@@ -19,7 +19,7 @@ export class Tests{
                 .getClient(appClientID)
                 .then((client: AadHttpClient)=>{
                     this.apiClient = client;
-                    console.log(client)
+                    console.log(client);
                     resolve();
 
                     this.apiClient
@@ -28,7 +28,7 @@ export class Tests{
                             return res.json().then((results:any)=>{
                                 console.log(results);
                             });
-                        })
+                        });
 
                 },err => reject(err));
         });

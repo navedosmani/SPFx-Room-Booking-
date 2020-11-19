@@ -11,7 +11,7 @@ export const getCalsData = (context: WebPartContext, calSettings:{CalType:string
     }else{
         return getDefaultCals(context, calSettings);
     }
-}
+};
 
 const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, calName:string) : string => {
     let resolvedCalUrl:string,
@@ -35,7 +35,7 @@ const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, c
             break;
     }
     return resolvedCalUrl;
-}
+};
 
 const getGraphCals = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
     
@@ -57,13 +57,13 @@ const getGraphCals = (context: WebPartContext, calSettings:{CalType:string, Titl
                                 end: formatStartDate(result.end.dateTime),
                                 _location: result.location.displayName,
                                 _body: result.body.content
-                            })
-                        })
+                            });
+                        });
                         resolve(calEvents);
-                    })
-            })
-    })
-}
+                    });
+            });
+    });
+};
 
 const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> =>{
     
@@ -88,17 +88,19 @@ const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Ti
                             start: result.fAllDayEvent ? formatStartDate(result.EventDate) : result.EventDate,
                             end: result.fAllDayEvent ? formatEndDate(result.EndDate) : result.EndDate,
                             allDay: result.fAllDayEvent,
+                            _location: result.Location,
+                            _body: result.Description,
                             recurr: result.fRecurrence,
                             recurrData: result.RecurrenceData,
                             rrule: result.fRecurrence ? parseRecurrentEvent(result.RecurrenceData, formatStartDate(result.EventDate), formatEndDate(result.EndDate)) : null
-                        })
-                    })
+                        });
+                    });
                     resolve(calEvents);
-                })
+                });
             }, (error:any):void=>{
                 reject("Error occured: " + error);
                 console.log(error);
-            })
-    })
+            });
+    });
     
-}
+};

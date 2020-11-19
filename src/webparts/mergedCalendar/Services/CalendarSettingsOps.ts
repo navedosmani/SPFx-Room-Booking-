@@ -3,7 +3,7 @@ import {SPHttpClient, SPHttpClientResponse, ISPHttpClientOptions, HttpClientResp
 
 export const getCalSettings = (context:WebPartContext, listName: string) : Promise <{}[]> => {
     
-    console.log('Get Cal Settings Function')
+    console.log('Get Cal Settings Function');
 
     let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items" ,
         calSettings : {}[] = [];
@@ -28,14 +28,14 @@ export const getCalSettings = (context:WebPartContext, listName: string) : Promi
                             Chkd: result.ShowCal ? true : false,
                             Disabled: result.CalType == 'My School' ? true : false,
                             Dpd: result.CalType == 'Rotary' ? true : false
-                        })
+                        });
                     });                    
                     resolve(calSettings);
-                })
+                });
                 
-            })
-    })
-}
+            });
+    });
+};
 
 export const updateCalSettings = (context:WebPartContext, listName: string, calSettings:any, checked?:boolean, dpdCalName?:any) : Promise <any> =>{
     let restApiUrl = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items("+calSettings.Id+")",
@@ -61,9 +61,9 @@ export const updateCalSettings = (context:WebPartContext, listName: string, calS
         .then((response: SPHttpClientResponse)=>{
             //console.log('item updated !!');
             resolve("Item updated");
-        })
-    })
-}
+        });
+    });
+};
 
 
 const getColorHex = (colorName:string) : string => {
@@ -110,4 +110,4 @@ const getColorHex = (colorName:string) : string => {
             break;
     }
     return colorHex;
-}
+};

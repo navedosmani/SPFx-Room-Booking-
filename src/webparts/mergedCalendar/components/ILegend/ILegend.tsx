@@ -20,7 +20,7 @@ export default function ILegend(props:ILegendProps){
                                 </div>
                             }
                         </li>
-                    )
+                    );
                 })
             }
             </ul>
