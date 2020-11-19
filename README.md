@@ -23,6 +23,7 @@ Milestones
 - Reading Graph calendars and modifying permissions
 - Implementing the Settings panel using Fluent UI
 - Implementing the Legend component
+- Implementing the dialog and event details components
 
 
 Terminal Commands
