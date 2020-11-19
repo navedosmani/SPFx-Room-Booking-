@@ -1,5 +1,4 @@
 import * as React from 'react';
-import {Label} from '@fluentui/react';
 import styles from '../MergedCalendar.module.scss';
 import {IEventDetailsProps} from './IEventDetailsProps';
 import {formateDate} from '../../Services/EventFormat';
@@ -10,18 +9,33 @@ export default function IEventDetails (props: IEventDetailsProps){
    
 
     return(
-        <div>
+        <div className={styles.eventDetails}>
 
-            <Label>Title</Label><p>{props.Title}</p>
-            <Label>Start time</Label><p>{formateDate(props.Start)}</p>
+            <div className={styles.evFld}>
+                <label className={styles.evLbl}>Title</label>
+                <div className={styles.evIp}>{props.Title}</div>
+            </div>
+            <div className={styles.evFld}>
+                <label className={styles.evLbl}>Start time</label>
+                <div className={styles.evIp}>{formateDate(props.Start)}</div>
+            </div>
             {props.End && 
-                <div><Label>End time</Label><p>{formateDate(props.End)}</p></div>
+                <div className={styles.evFld}>
+                    <label className={styles.evLbl}>End Time</label>
+                    <div className={styles.evIp}>{formateDate(props.End)}</div>
+                </div>
             }
             {props.Location &&
-                <div><Label>Location</Label><p>{props.Location}</p></div>
+                <div className={styles.evFld}>
+                    <label className={styles.evLbl}>Location</label>
+                    <div className={styles.evIp}>{props.Location}</div>
+                </div>
             }
             {props.Body &&
-                <div><Label>Description</Label><p dangerouslySetInnerHTML={{__html: props.Body}}></p></div>
+                <div className={styles.evFld}>
+                    <label className={styles.evLbl +" "+ styles.nonFL}>Description</label>
+                    <div><p dangerouslySetInnerHTML={{__html: props.Body}}></p></div>
+                </div>
             }
 
 

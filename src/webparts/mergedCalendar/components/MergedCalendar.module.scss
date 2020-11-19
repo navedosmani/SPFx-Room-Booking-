@@ -117,3 +117,28 @@
 }
 
 
+.eventDetails{
+  .evLbl{
+    width:20%;
+    float: left;
+    font-weight: 600;
+  }
+  .nonFL{
+    float: none;
+  }
+  .evIp{
+    width:70%;
+    float: left;
+  }
+  .evFld {
+    display: block;
+    margin: 10px 0px;
+
+    &:after{
+      clear: both;
+      display: block;
+      content: " ";
+    }
+    
+  }
+}

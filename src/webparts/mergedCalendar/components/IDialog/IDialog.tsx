@@ -22,7 +22,7 @@ export default function IDialog(props:IDialogProps){
             onDismiss={props.toggleHideDialog}
             dialogContentProps={dialogContentProps}
             modalProps={modelProps}
-            minWidth="30%" >
+            minWidth="35%" >
 
             <IEventDetails 
                 Title ={props.evDetails1.title} 
