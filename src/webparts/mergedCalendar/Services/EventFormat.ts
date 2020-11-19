@@ -2,7 +2,7 @@ import * as moment from 'moment';
 
 
 export const formateDate = (ipDate:any) :any => {
-    return moment.utc(ipDate).format('YYYY-MM-DD hh:mm A'); 
+    return moment(ipDate).format('YYYY-MM-DD hh:mm A'); 
 }
 
 export const formatStartDate = (ipDate:any) : any => {
