@@ -1,8 +1,6 @@
 import * as React from 'react';
 import styles from '../MergedCalendar.module.scss';
 import {IEventDetailsProps} from './IEventDetailsProps';
-import {formateDate} from '../../Services/EventFormat';
-
 
 export default function IEventDetails (props: IEventDetailsProps){
 
@@ -40,10 +38,6 @@ export default function IEventDetails (props: IEventDetailsProps){
                     <div><p dangerouslySetInnerHTML={{__html: props.Body}}></p></div>
                 </div>
             }
-
-
-            {/*<b>All Day: </b><label>{props.AllDay}</label><br/>
-            <b>Recurrence: </b><label>{props.Recurrence}</label><br/> */}
         </div>
     );
 }
