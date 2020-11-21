@@ -29,11 +29,18 @@ export default function ICalendar(props:ICalendarProps){
                   click : props.openPanel,
                 }
               }}          
-              initialView='dayGridMonth'
+              eventTimeFormat={{
+                hour: 'numeric',
+                minute: '2-digit',
+                meridiem: 'short'
+              }}
+              initialView='dayGridMonth'              
               editable={false}
               selectable={true}
               selectMirror={true}
               dayMaxEvents={true}
+              displayEventEnd={true}
+              eventDisplay='block'
               weekends={props.showWeekends}
               eventClick={props.handleDateClick}
               eventSources = {props.eventSources}
