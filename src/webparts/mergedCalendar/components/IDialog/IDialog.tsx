@@ -10,7 +10,7 @@ export default function IDialog(props:IDialogProps){
         //styles: { main: { minWidth: '30%' } },
       };
       const dialogContentProps = {
-        type: DialogType.largeHeader,
+        type: DialogType.close,
         title: 'Event Details',
         subText: '',
       };
