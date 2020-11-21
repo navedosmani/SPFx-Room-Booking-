@@ -15,22 +15,24 @@ export default function IPanel (props:IPanelProps) {
             headerText="Calendar Settings"
             closeButtonAriaLabel="Close"
             isFooterAtBottom={true}>
-            <Stack tokens={stackTokens} className={styles.calendarPanel}>
-                {props.calSettings.map((value:any, index) => {        
-                    return (
-                        <div>
-                        <Checkbox key={index} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
-                        {value.Dpd &&
-                            <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
-                        }
-                        </div>
-                    );
-                })}
-            </Stack>
+            <div className={styles.calendarPanel}>
+                <Stack tokens={stackTokens}>
+                    {props.calSettings.map((value:any, index) => {        
+                        return (
+                            <div>
+                            <Checkbox key={index} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
+                            {value.Dpd &&
+                                <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
+                            }
+                            </div>
+                        );
+                    })}
+                </Stack>
+            </div>
             {props.isDataLoading &&
                 <div>
                     <Overlay></Overlay>
-                    <div className={styles.marginT5}>
+                    <div className={styles.marginT20}>
                         <Spinner size={SpinnerSize.medium} label="Please Wait, Calendars are updating..." ariaLive="assertive" labelPosition="right" />
                     </div>
                 </div>
