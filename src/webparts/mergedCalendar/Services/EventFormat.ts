@@ -36,7 +36,7 @@ export const formatEvDetails = (ev:any) : {} =>{
         Start: event.startStr ? formateDate(event.startStr) : "",
         End: event.endStr ? formateDate(event.endStr) : "",
         Location: event._def.extendedProps._location,
-        Body: event._def.extendedProps._body,
+        Body: event._def.extendedProps._body ? event._def.extendedProps._body : null,
         AllDay: event.allDay,
         Recurr: event._def.extendedProps.recurr,
         RecurrData: event._def.extendedProps.recurrData,
