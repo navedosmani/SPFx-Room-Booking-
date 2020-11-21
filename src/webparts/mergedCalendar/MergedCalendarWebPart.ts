@@ -70,7 +70,7 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
                 }),*/
                 PropertyPaneCheckbox('showWeekends', {
                   text: "Show Weekends",
-                  checked : true,
+                  checked : false,
                 })
               ]
             }
