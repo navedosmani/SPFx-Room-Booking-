@@ -5,6 +5,7 @@ export interface IPanelProps{
     calSettings: {}[];
     isOpen: boolean;
     dismissPanel: any;
+    isDataLoading: boolean;    
     onChkChange: (calSettings:{}) => ((ev: any, checked: boolean)=>void);
     onDpdChange: (calSettings:{}) => ((ev: any, item: IDropdownOption)=>void);
 }

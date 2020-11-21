@@ -23,6 +23,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [isOpen, { setTrue: openPanel, setFalse: dismissPanel }] = useBoolean(false);
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
   const [eventDetails, setEventDetails] = React.useState({});
+  const [isDataLoading, { toggle: toggleIsDataLoading }] = useBoolean(false);
 
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
@@ -33,20 +34,24 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
   },[eventSources.length]);
 
-  const chkHandleChange = (newCalSettings:{})=>{
+  const chkHandleChange = (newCalSettings:{})=>{    
     return (ev: any, checked: boolean) => { 
+      toggleIsDataLoading();
       updateCalSettings(props.context, props.calSettingsList, newCalSettings, checked).then(()=>{
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
+          toggleIsDataLoading();
         });
       });
      };
   };
   const dpdHandleChange = (newCalSettings:any)=>{
     return (ev: any, item: IDropdownOption) => { 
+      toggleIsDataLoading();
       updateCalSettings(props.context, props.calSettingsList, newCalSettings, newCalSettings.ShowCal, item.key).then(()=>{
         _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
           setEventSources(result);
+          toggleIsDataLoading();
         });
       });
      };
@@ -75,7 +80,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         onChkChange={chkHandleChange}
         onDpdChange={dpdHandleChange}
         isOpen = {isOpen}
-        dismissPanel = {dismissPanel}/>
+        dismissPanel = {dismissPanel}
+        isDataLoading = {isDataLoading} />
 
       <ILegend calSettings={calSettings} />
 
