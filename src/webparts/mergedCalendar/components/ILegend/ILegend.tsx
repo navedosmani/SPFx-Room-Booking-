@@ -9,10 +9,10 @@ export default function ILegend(props:ILegendProps){
         <div className={styles.calendarLegend}>
             <ul>
             {
-                props.calSettings.map((value:any, index)=>{
+                props.calSettings.map((value:any)=>{
                     return(
                         
-                        <li key={index}>
+                        <li key={value.Id}>
                             {value.ShowCal &&
                                 <div>
                                     <span className={styles.legendBullet +' calLegend_'+value.BgColor}></span>

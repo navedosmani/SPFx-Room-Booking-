@@ -11,10 +11,10 @@ export default function ICalSettings (props:ICalSettingsProps) {
     return(
         <div className={styles.calendarPanel}>
             <Stack tokens={stackTokens}>
-                {props.calSettings.map((value:any, index) => {        
+                {props.calSettings.map((value:any) => {        
                     return (
                         <div>
-                        <Checkbox key={index} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
+                        <Checkbox key={value.Id} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
                         {value.Dpd &&
                             <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
                         }
