@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { IPanelProps } from './IPanelProps';
 import ICalSettings from '../ICalSettings/ICalSettings';
-import IPreloader from '../IPreloader/IPreloader'
+import IPreloader from '../IPreloader/IPreloader';
 
 import {Panel} from '@fluentui/react';
 
