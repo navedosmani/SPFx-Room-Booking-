@@ -12,40 +12,38 @@ export default function ICalendar(props:ICalendarProps){
 
     return(
         <div className={styles.calendarCntnr}>
-          
-          <div>
-            <FullCalendar
-              plugins = {
-                [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin]
+          <FullCalendar
+            plugins = {
+              [dayGridPlugin, timeGridPlugin, interactionPlugin, rrulePlugin]
+            }
+            headerToolbar = {{
+              left: 'prev,next today',
+              center: 'title',
+              right: 'dayGridMonth,timeGridWeek,timeGridDay, settingsBtn'
+            }}
+            customButtons = {{
+              settingsBtn : {
+                text : 'Settings',
+                click : props.openPanel,
               }
-              headerToolbar = {{
-                left: 'prev,next today',
-                center: 'title',
-                right: 'dayGridMonth,timeGridWeek,timeGridDay, settingsBtn'
-              }}
-              customButtons = {{
-                settingsBtn : {
-                  text : 'Settings',
-                  click : props.openPanel,
-                }
-              }}          
-              eventTimeFormat={{
-                hour: 'numeric',
-                minute: '2-digit',
-                meridiem: 'short'
-              }}
-              initialView='dayGridMonth'              
-              editable={false}
-              selectable={true}
-              selectMirror={true}
-              dayMaxEvents={true}
-              displayEventEnd={true}
-              eventDisplay='block'
-              weekends={props.showWeekends}
-              eventClick={props.handleDateClick}
-              eventSources = {props.eventSources}
-            />
-          </div>
+            }}          
+            eventTimeFormat={{
+              hour: 'numeric',
+              minute: '2-digit',
+              meridiem: 'short'
+            }}
+            initialView='dayGridMonth'   
+            eventClassNames={styles.eventItem}           
+            editable={false}
+            selectable={true}
+            selectMirror={true}
+            dayMaxEvents={true}
+            displayEventEnd={true}
+            eventDisplay='block'
+            weekends={props.showWeekends}
+            eventClick={props.handleDateClick}
+            eventSources = {props.eventSources}
+          />
       </div> 
     );
 }
