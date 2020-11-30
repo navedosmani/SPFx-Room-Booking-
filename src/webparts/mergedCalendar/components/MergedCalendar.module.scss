@@ -2,6 +2,19 @@
 
 .calendarPanel{
   margin-top: 25px;
+  .panelHeader{
+    border-bottom: 1px solid #ddd;
+    i{
+      margin-right: 10px;
+      vertical-align: middle;
+      font-size: 16px;
+      color: #666;
+    }
+  }
+  .panelSeparator{
+    margin-top: 30px;
+    border: none;
+  }
 }
 
 .marginR10{
@@ -98,6 +111,10 @@
 
   .calendarCntnr{
     clear: both;
+
+    .eventItem{
+      cursor: pointer;
+    }
   }
 
   .calendarLegend{
@@ -116,6 +133,13 @@
     }
     .legendText{
       margin-left: 2px;
+    }
+    a{
+      text-decoration: none;
+      color:#038387;
+      &:hover{
+        text-decoration: underline;
+      }
     }
   }
   
