@@ -74,7 +74,8 @@ export const getCalSettings = (context:WebPartContext, listName: string) : Promi
                             Title: result.Title,
                             Chkd: result.ShowCal ? true : false,
                             Disabled: result.CalType == 'My School' ? true : false,
-                            Dpd: result.CalType == 'Rotary' ? true : false
+                            Dpd: result.CalType == 'Rotary' ? true : false,
+                            LegendURL : result.CalType !== 'Graph' ? result.CalURL + "/Lists/" + result.CalName : null
                         });
                     });                    
                     resolve(calSettings);

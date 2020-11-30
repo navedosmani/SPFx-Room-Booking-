@@ -11,13 +11,12 @@ export default function ILegend(props:ILegendProps){
             {
                 props.calSettings.map((value:any)=>{
                     return(
-                        
                         <li key={value.Id}>
                             {value.ShowCal &&
-                                <div>
-                                    <span className={styles.legendBullet +' calLegend_'+value.BgColor}></span>
+                            <a href={value.LegendURL} target="_blank" data-interception="off">
+                                <span className={styles.legendBullet +' calLegend_'+value.BgColor}></span>
                                     <span className={styles.legendText}>{value.Title}</span>
-                                </div>
+                            </a>
                             }
                         </li>
                     );
