@@ -69,7 +69,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
       <ICalendar 
         eventSources={eventSources} 
-        showWeekends={props.showWeekends} 
+        showWeekends={props.showWeekends ? props.showWeekends : false } 
         calSettings={calSettings}
         openPanel={openPanel}
         handleDateClick={handleDateClick}/>
