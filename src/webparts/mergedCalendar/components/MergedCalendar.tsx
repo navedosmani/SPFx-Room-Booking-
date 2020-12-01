@@ -93,7 +93,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         isOpen = {isOpen}
         dismissPanel = {dismissPanel}
         isDataLoading = {isDataLoading} 
-        showWeekends= {props.showWeekends} 
+        showWeekends= {showWeekends} 
         onChkViewChange= {chkViewHandleChange}/>
 
       <ILegend calSettings={calSettings} />
