@@ -9,6 +9,7 @@ import {useBoolean} from '@fluentui/react-hooks';
 import {CalendarOperations} from '../Services/CalendarOperations';
 import {getCalSettings, updateCalSettings} from '../Services/CalendarSettingsOps';
 import {formatEvDetails} from '../Services/EventFormat';
+import {setWpData} from '../Services/WpProperties';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -24,6 +25,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
   const [eventDetails, setEventDetails] = React.useState({});
   const [isDataLoading, { toggle: toggleIsDataLoading }] = useBoolean(false);
+  const [showWeekends, { toggle: toggleshowWeekends }] = useBoolean(props.showWeekends);
 
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
@@ -44,7 +46,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         });
       });
      };
-  };
+  };  
   const dpdHandleChange = (newCalSettings:any)=>{
     return (ev: any, item: IDropdownOption) => { 
       toggleIsDataLoading();
@@ -55,6 +57,14 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         });
       });
      };
+  };
+  const chkViewHandleChange = (ev: any, checked: boolean) =>{
+    toggleIsDataLoading();
+    setWpData(props.context, "showWeekends", checked).then(()=>{
+      toggleshowWeekends();
+      toggleIsDataLoading();
+    });
+    
   };
   const handleDateClick = (arg:any) =>{
     //console.log(arg);
@@ -69,7 +79,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
       <ICalendar 
         eventSources={eventSources} 
-        showWeekends={props.showWeekends ? props.showWeekends : false } 
+        // showWeekends={props.showWeekends ? props.showWeekends : false } 
+        showWeekends={showWeekends}
         calSettings={calSettings}
         openPanel={openPanel}
         handleDateClick={handleDateClick}/>
@@ -81,7 +92,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         onDpdChange={dpdHandleChange}
         isOpen = {isOpen}
         dismissPanel = {dismissPanel}
-        isDataLoading = {isDataLoading} />
+        isDataLoading = {isDataLoading} 
+        showWeekends= {props.showWeekends} 
+        onChkViewChange= {chkViewHandleChange}/>
 
       <ILegend calSettings={calSettings} />
 
