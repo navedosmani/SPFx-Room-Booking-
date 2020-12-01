@@ -20,6 +20,8 @@ export default function IPanel (props:IPanelProps) {
                 dpdOptions={props.dpdOptions}
                 onChkChange={props.onChkChange}
                 onDpdChange={props.onDpdChange}
+                showWeekends={props.showWeekends}
+                onChkViewChange={props.onChkViewChange}
             />
             
             <IPreloader isDataLoading={props.isDataLoading} />

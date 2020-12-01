@@ -6,6 +6,8 @@ export interface IPanelProps{
     isOpen: boolean;
     dismissPanel: any;
     isDataLoading: boolean;    
+    showWeekends: boolean;
     onChkChange: (calSettings:{}) => ((ev: any, checked: boolean)=>void);
+    onChkViewChange : (ev: any, checked: boolean) => void;
     onDpdChange: (calSettings:{}) => ((ev: any, item: IDropdownOption)=>void);
 }

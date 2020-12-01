@@ -11,6 +11,7 @@ export default function ICalSettings (props:ICalSettingsProps) {
     const stackTokens = { childrenGap: 20 , maxWidth: 250};    
     initializeIcons();
     const CalendarIcon = () => <Icon iconName="Calendar" />;
+    const CalendarSettingsIcon = () => <Icon iconName="CalendarSettings" />;
 
     return(
         <div className={styles.calendarPanel}>
@@ -27,9 +28,9 @@ export default function ICalSettings (props:ICalSettingsProps) {
                     );
                 })}
             </Stack>
-            {/* <hr className={styles.panelSeparator}/>
-            <h3 className={styles.panelHeader}><Label><CalendarSettingsIcon />Weekends</Label></h3>
-            <Checkbox label="Show Weekends" defaultChecked={props.showWeekends} /> */}
+            <hr className={styles.panelSeparator}/>
+            <h3 className={styles.panelHeader}><Label><CalendarSettingsIcon />Settings</Label></h3>
+            <Checkbox label="Show Weekends" defaultChecked={props.showWeekends} onChange={props.onChkViewChange}/>
         </div>
     );
 }
