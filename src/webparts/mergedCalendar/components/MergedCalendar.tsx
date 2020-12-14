@@ -27,11 +27,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [isDataLoading, { toggle: toggleIsDataLoading }] = useBoolean(false);
   const [showWeekends, { toggle: toggleshowWeekends }] = useBoolean(props.showWeekends);
 
+  const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
+  // const calSettingsList = props.calSettingsList ;
   React.useEffect(()=>{
-    _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
+    _calendarOps.displayCalendars(props.context, calSettingsList).then((result:{}[])=>{
       setEventSources(result);
     });
-    getCalSettings(props.context, props.calSettingsList).then((result:{}[])=>{
+    getCalSettings(props.context, calSettingsList).then((result:{}[])=>{
       setCalSettings(result);
     });
   },[eventSources.length]);
@@ -39,8 +41,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const chkHandleChange = (newCalSettings:{})=>{    
     return (ev: any, checked: boolean) => { 
       toggleIsDataLoading();
-      updateCalSettings(props.context, props.calSettingsList, newCalSettings, checked).then(()=>{
-        _calendarOps.displayCalendars(props.context, props.calSettingsList).then((result:{}[])=>{
+      updateCalSettings(props.context, calSettingsList, newCalSettings, checked).then(()=>{
+        _calendarOps.displayCalendars(props.context, calSettingsList).then((result:{}[])=>{
           setEventSources(result);
           toggleIsDataLoading();
         });
@@ -83,7 +85,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         showWeekends={showWeekends}
         calSettings={calSettings}
         openPanel={openPanel}
-        handleDateClick={handleDateClick}/>
+        handleDateClick={handleDateClick}
+        context={props.context}/>
 
       <IPanel
         dpdOptions={props.dpdOptions} 
