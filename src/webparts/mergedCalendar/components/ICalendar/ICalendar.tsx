@@ -8,6 +8,8 @@ import rrulePlugin from '@fullcalendar/rrule';
 import styles from '../MergedCalendar.module.scss';
 import {ICalendarProps} from './ICalendarProps';
 
+import {isUserManage} from '../../Services/WpProperties';
+
 export default function ICalendar(props:ICalendarProps){
 
     return(
@@ -19,7 +21,7 @@ export default function ICalendar(props:ICalendarProps){
             headerToolbar = {{
               left: 'prev,next today',
               center: 'title',
-              right: 'dayGridMonth,timeGridWeek,timeGridDay, settingsBtn'
+              right: isUserManage(props.context) ? 'dayGridMonth,timeGridWeek,timeGridDay, settingsBtn' : 'dayGridMonth,timeGridWeek,timeGridDay' 
             }}
             customButtons = {{
               settingsBtn : {

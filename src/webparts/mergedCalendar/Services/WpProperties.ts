@@ -1,4 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
+import { SPPermission } from "@microsoft/sp-page-context";
 import {SPHttpClientResponse, SPHttpClient, ISPHttpClientOptions} from "@microsoft/sp-http";
 
 const getWpSavedData = (context: WebPartContext) : Promise <{}[]> => {
@@ -59,4 +60,12 @@ export const setWpData = async (context: WebPartContext, propName: string, propV
     //publishing the page 
     apiUrl = `${context.pageContext.web.absoluteUrl}/_api/sitepages/pages(${context.pageContext.listItem.id})/publish`;
     const _checkedInPage = await context.spHttpClient.post(apiUrl, SPHttpClient.configurations.v1, {});
+};
+
+
+export const isUserManage = (context: WebPartContext) : boolean =>{
+    const userPermissions = context.pageContext.web.permissions,
+        permission = new SPPermission (userPermissions.value);
+    
+    return permission.hasPermission(SPPermission.manageWeb);
 };
