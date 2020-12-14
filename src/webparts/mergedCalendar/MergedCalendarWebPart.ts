@@ -143,7 +143,8 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
                 // }),
                 PropertyPaneDropdown('calSettingsList', {
                   label : 'Calendar Settings List',
-                  options: this.lists
+                  options: this.lists,
+                  selectedKey : 'CalendarSettings'
                 }),
                 PropertyPaneCheckbox('showWeekends', {
                   text: "Show Weekends"
