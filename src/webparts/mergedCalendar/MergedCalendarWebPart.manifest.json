@@ -21,7 +21,9 @@
     "description": { "default": "MergedCalendar description" },
     "officeFabricIconFontName": "Page",
     "properties": {
-      "description": "MergedCalendar"
+      "description": "MergedCalendar",
+      "showWeekends" : false,
+      "calSettingsList" : "CalendarSettings"
     }
   }]
 }
