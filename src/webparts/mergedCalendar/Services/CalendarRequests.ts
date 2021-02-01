@@ -56,7 +56,7 @@ const getGraphCals = (context: WebPartContext, calSettings:{CalType:string, Titl
     });
 };
 
-const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> =>{
+const getDefaultCals1 = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> =>{
     
     let calUrl :string = resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
         calEvents : {}[] = [] ;
@@ -66,6 +66,8 @@ const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Ti
             'Accept': 'application/json;odata=verbose'
         }
     };
+
+    console.log("calURL", calUrl);
 
     return new Promise <{}[]> (async(resolve, reject) =>{
         context.httpClient
@@ -88,12 +90,50 @@ const getDefaultCals = (context: WebPartContext, calSettings:{CalType:string, Ti
                     });
                     resolve(calEvents);
                 });
-            }, (error:any):void=>{
-                reject("Error occured: " + error);
-                console.log(error);
+            }).catch((error:any)=>{
+                resolve([]);
+                console.log("Calendar URL error!");
             });
     });
     
+};
+
+export const getDefaultCals = async (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
+    let calUrl :string = resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
+        calEvents : {}[] = [] ;
+
+    const myOptions: IHttpClientOptions = {
+        headers : { 
+            'Accept': 'application/json;odata=verbose'
+        }
+    };
+
+    const _data = await context.httpClient.get(calUrl, HttpClient.configurations.v1, myOptions);
+        
+    if (_data.ok){
+        const calResult = await _data.json();
+        if(calResult){
+            calResult.d.results.map((result:any)=>{
+                calEvents.push({
+                    id: result.ID,
+                    title: result.Title,
+                    start: result.fAllDayEvent ? formatStartDate(result.EventDate) : result.EventDate,
+                    end: result.fAllDayEvent ? formatEndDate(result.EndDate) : result.EndDate,
+                    allDay: result.fAllDayEvent,
+                    _location: result.Location,
+                    _body: result.Description,
+                    recurr: result.fRecurrence,
+                    recurrData: result.RecurrenceData,
+                    rrule: result.fRecurrence ? parseRecurrentEvent(result.RecurrenceData, formatStartDate(result.EventDate), formatEndDate(result.EndDate)) : null
+                });
+            });
+        }
+    }else{
+        //alert("Calendar Error");
+        return [];
+    }
+        
+    return calEvents;
 };
 
 export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
