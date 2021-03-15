@@ -6,4 +6,5 @@ export interface IEventDetailsProps{
     Location?: string;
     Body?: any;
     Recurrence?: string;
+    handleAddtoCal: any;
 }

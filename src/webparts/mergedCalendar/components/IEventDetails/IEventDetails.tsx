@@ -2,6 +2,8 @@ import * as React from 'react';
 import styles from '../MergedCalendar.module.scss';
 import {IEventDetailsProps} from './IEventDetailsProps';
 
+import {DefaultButton} from '@fluentui/react';
+
 export default function IEventDetails (props: IEventDetailsProps){
 
     return(
@@ -38,6 +40,9 @@ export default function IEventDetails (props: IEventDetailsProps){
                     <div><p dangerouslySetInnerHTML={{__html: props.Body}}></p></div>
                 </div>
             }
+
+            {/* <DefaultButton onClick={props.handleAddtoCal}>Add dummy event to my Calendar</DefaultButton> */}
+
         </div>
     );
 }

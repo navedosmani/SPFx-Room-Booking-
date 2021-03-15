@@ -8,6 +8,7 @@ import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
 import {getCalSettings, updateCalSettings} from '../Services/CalendarSettingsOps';
+import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
 
@@ -26,6 +27,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [eventDetails, setEventDetails] = React.useState({});
   const [isDataLoading, { toggle: toggleIsDataLoading }] = useBoolean(false);
   const [showWeekends, { toggle: toggleshowWeekends }] = useBoolean(props.showWeekends);
+  const [listGUID, setListGUID] = React.useState('');
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   // const calSettingsList = props.calSettingsList ;
@@ -35,6 +37,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
     getCalSettings(props.context, calSettingsList).then((result:{}[])=>{
       setCalSettings(result);
+    });
+    getMySchoolCalGUID(props.context, calSettingsList).then((result)=>{
+      setListGUID(result);
     });
   },[eventSources.length]);
 
@@ -75,6 +80,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     toggleHideDialog();
   };
 
+  const handleAddtoCal = ()=>{
+    addToMyGraphCal(props.context).then((result)=>{
+      console.log('calendar updated', result);
+    });
+  };
 
   return(
     <div className={styles.mergedCalendar}>
@@ -86,7 +96,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         calSettings={calSettings}
         openPanel={openPanel}
         handleDateClick={handleDateClick}
-        context={props.context}/>
+        context={props.context}
+        listGUID = {listGUID}/>
 
       <IPanel
         dpdOptions={props.dpdOptions} 
@@ -104,8 +115,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       <IDialog 
         hideDialog={hideDialog} 
         toggleHideDialog={toggleHideDialog}
-        eventDetails={eventDetails}/>
-
+        eventDetails={eventDetails}
+        handleAddtoCal = {handleAddtoCal}
+        />
+    
     </div>
   );
   

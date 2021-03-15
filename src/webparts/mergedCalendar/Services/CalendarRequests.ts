@@ -1,5 +1,5 @@
 import { WebPartContext } from "@microsoft/sp-webpart-base";
-import {HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
+import {HttpClientResponse, HttpClient, IHttpClientOptions, MSGraphClient, SPHttpClient} from "@microsoft/sp-http";
 
 import {formatStartDate, formatEndDate} from '../Services/EventFormat';
 import {parseRecurrentEvent} from '../Services/RecurrentEventOps';
@@ -54,6 +54,46 @@ const getGraphCals = (context: WebPartContext, calSettings:{CalType:string, Titl
                     });
             });
     });
+};
+
+export const addToMyGraphCal = async (context: WebPartContext) =>{
+    
+    const event = {
+        "subject": "Let's add this to my calendar",
+        "body": {
+            "contentType": "HTML",
+            "content": "Adding a dummy event to my graph calendar"
+        },
+        "start": {
+            "dateTime": "2021-02-15T12:00:00",
+            "timeZone": "Pacific Standard Time"
+        },
+        "end": {
+            "dateTime": "2021-02-15T14:00:00",
+            "timeZone": "Pacific Standard Time"
+        },
+        "location": {
+            "displayName": "Peel CBO"
+        },
+        "attendees": [{
+            "emailAddress": {
+                "address": "mai.mostafa@peelsb.com",
+                "name": "Mai Mostafa"
+            },
+            "type": "required"
+        }]
+    };
+
+    context.msGraphClientFactory
+        .getClient()
+        .then((client :MSGraphClient)=>{
+            client
+                .api("/me/events")
+                .post(event, (err, res) => {
+                    console.log(res);
+                });
+        });
+
 };
 
 const getDefaultCals1 = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> =>{
@@ -143,3 +183,4 @@ export const getCalsData = (context: WebPartContext, calSettings:{CalType:string
         return getDefaultCals(context, calSettings);
     }
 };
+

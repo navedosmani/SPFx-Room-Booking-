@@ -30,7 +30,8 @@ export default function IDialog(props:IDialogProps){
                 End = {props.eventDetails.End}
                 AllDay = {props.eventDetails.AllDay}
                 Body = {props.eventDetails.Body}
-                Location = {props.eventDetails.Location}                
+                Location = {props.eventDetails.Location}       
+                handleAddtoCal = {props.handleAddtoCal}         
             />
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />
