@@ -49,7 +49,7 @@ export default function ICalendar(props:ICalendarProps){
             editable={false}
             selectable={true}
             selectMirror={true}
-            dayMaxEvents={true}
+            dayMaxEvents={false}
             displayEventEnd={true}
             eventDisplay='block'
             weekends={props.showWeekends}
