@@ -19,12 +19,17 @@ export default function ICalSettings (props:ICalSettingsProps) {
             <Stack tokens={stackTokens}>
                 {props.calSettings.map((value:any) => {        
                     return (
-                        <div>                            
-                            <Checkbox key={value.Id} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
-                            {value.Dpd &&
-                                <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
-                            }
-                        </div>
+                        <>
+                        {value.CalType !== 'External' &&
+                            <div>                            
+                                <Checkbox key={value.Id} onChange={props.onChkChange(value)} defaultChecked={value.Chkd} label={value.Title} disabled={value.Disabled} />
+                                {value.Dpd &&
+                                    <Dropdown onChange={props.onDpdChange(value)} className={styles.marginT5} placeholder="Select Day..."  defaultSelectedKey={value.CalName} options={props.dpdOptions} />
+                                }
+                            </div>
+                        }
+                        </>
+                        
                     );
                 })}
             </Stack>
