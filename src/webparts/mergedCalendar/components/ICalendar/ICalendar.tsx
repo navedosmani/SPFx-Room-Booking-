@@ -21,12 +21,22 @@ export default function ICalendar(props:ICalendarProps){
             headerToolbar = {{
               left: 'prev,next today',
               center: 'title',
-              right: isUserManage(props.context) ? 'dayGridMonth,timeGridWeek,timeGridDay, settingsBtn' : 'dayGridMonth,timeGridWeek,timeGridDay' 
+              right: isUserManage(props.context) ? 'dayGridMonth,timeGridWeek,timeGridDay settingsBtn addEventBtn' : 'dayGridMonth,timeGridWeek,timeGridDay addEventBtn' 
             }}
             customButtons = {{
               settingsBtn : {
                 text : 'Settings',
                 click : props.openPanel,
+              },
+              addEventBtn : {
+                text: 'Add Event',
+                click : function(){
+                  window.open(
+                    props.context.pageContext.web.absoluteUrl + '/_layouts/15/Event.aspx?ListGuid='+ props.listGUID +'&Mode=Edit',
+                    '_blank' 
+                  );
+                }
+                
               }
             }}          
             eventTimeFormat={{

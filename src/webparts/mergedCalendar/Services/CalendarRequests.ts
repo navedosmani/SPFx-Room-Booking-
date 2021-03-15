@@ -184,3 +184,13 @@ export const getCalsData = (context: WebPartContext, calSettings:{CalType:string
     }
 };
 
+export const getMySchoolCalGUID = async (context: WebPartContext, calSettingsListName: string) =>{
+    const calSettingsRestUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${calSettingsListName}')/items?$filter=CalType eq 'My School'&$select=CalName`;
+    const calSettingsCall = await context.spHttpClient.get(calSettingsRestUrl, SPHttpClient.configurations.v1).then(response => response.json());
+    const calName = calSettingsCall.value[0].CalName;
+
+    const calRestUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/GetByTitle('${calName}')?$select=id`;
+    const calCall = await context.spHttpClient.get(calRestUrl, SPHttpClient.configurations.v1).then(response => response.json());
+    
+    return calCall.Id;
+};

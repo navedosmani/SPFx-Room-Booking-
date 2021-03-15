@@ -7,4 +7,5 @@ export interface ICalendarProps{
     openPanel: any;
     handleDateClick: (args:any) => void;
     context: WebPartContext;
+    listGUID: string;
 }
