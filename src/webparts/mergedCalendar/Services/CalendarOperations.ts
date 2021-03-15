@@ -17,7 +17,7 @@ export class CalendarOperations{
         return getCalSettings(context, calSettingsListName).then(async (settings:any) => {
             const dataFetches = settings.map(setting => {
                 // This `return` is needed otherwise `undefined` is returned in this `map()` call.
-                if(setting.ShowCal && setting.CalType !== 'External'){
+                if(setting.ShowCal){
                     return getCalsData(context, setting).then((events: any) => {
                         eventSrc = {
                             events: events,
