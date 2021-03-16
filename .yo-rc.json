@@ -3,8 +3,8 @@
     "isCreatingSolution": true,
     "environment": "spo",
     "version": "1.11.0",
-    "libraryName": "merged-calendar",
-    "libraryId": "e3789c34-cf80-4df9-9dc0-4a01c25e9ce6",
+    "libraryName": "spfx-room-booking",
+    "libraryId": "84fd9f85-a309-4b1e-98fd-db8ae45e1323",
     "packageManager": "npm",
     "isDomainIsolated": false,
     "componentType": "webpart"

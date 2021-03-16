@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "merged-calendar-client-side-solution",
-    "id": "e3789c34-cf80-4df9-9dc0-4a01c25e9ce6",
+    "name": "spfx-room-booking",
+    "id": "84fd9f85-a309-4b1e-98fd-db8ae45e1323",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
@@ -54,6 +54,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/merged-calendar.sppkg"
+    "zippedPackage": "solution/spfx-room-booking.sppkg"
   }
 }
