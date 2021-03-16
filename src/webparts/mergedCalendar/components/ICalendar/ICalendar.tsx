@@ -21,7 +21,7 @@ export default function ICalendar(props:ICalendarProps){
             headerToolbar = {{
               left: 'prev,next today',
               center: 'title',
-              right: isUserManage(props.context) ? 'dayGridMonth,timeGridWeek,timeGridDay settingsBtn addEventBtn' : 'dayGridMonth,timeGridWeek,timeGridDay addEventBtn' 
+              right: isUserManage(props.context) ? 'dayGridMonth,timeGridWeek,timeGridDay settingsBtn' : 'dayGridMonth,timeGridWeek,timeGridDay' 
             }}
             customButtons = {{
               settingsBtn : {

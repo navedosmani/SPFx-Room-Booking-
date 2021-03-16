@@ -38,9 +38,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     getCalSettings(props.context, calSettingsList).then((result:{}[])=>{
       setCalSettings(result);
     });
-    getMySchoolCalGUID(props.context, calSettingsList).then((result)=>{
+    /*getMySchoolCalGUID(props.context, calSettingsList).then((result)=>{
       setListGUID(result);
-    });
+    });*/
   },[eventSources.length]);
 
   const chkHandleChange = (newCalSettings:{})=>{    
