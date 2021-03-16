@@ -9,14 +9,18 @@ const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, c
     let resolvedCalUrl:string,
         azurePeelSchoolsUrl :string = "https://pdsb1.azure-api.net/peelschools",
         restApiUrl :string = "/_api/web/lists/getByTitle('"+calName+"')/items",
+        restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=300",
+        restApiParamsRoom: string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData,RoomName/ColorCalculated,RoomName/ID,RoomName/Title&$expand=RoomName&$orderby=EventDate desc&$top=300";
         //restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'";
-        restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=300";
-    //$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'
+        //$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'
 
     switch (calType){
         case "Internal":
         case "Rotary":
             resolvedCalUrl = calUrl + restApiUrl + restApiParams;
+            break;
+        case "Room":
+            resolvedCalUrl = calUrl + restApiUrl + restApiParamsRoom;
             break;
         case "My School":
             resolvedCalUrl = context.pageContext.web.absoluteUrl + restApiUrl + restApiParams;
@@ -176,9 +180,51 @@ export const getDefaultCals = async (context: WebPartContext, calSettings:{CalTy
     return calEvents;
 };
 
+export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
+    let calUrl :string = resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
+        calEvents : {}[] = [] ;
+
+    const myOptions: IHttpClientOptions = {
+        headers : { 
+            'Accept': 'application/json;odata=verbose'
+        }
+    };
+
+    const _data = await context.httpClient.get(calUrl, HttpClient.configurations.v1, myOptions);
+        
+    if (_data.ok){
+        const calResult = await _data.json();
+        console.log(calResult);
+        if(calResult){
+            calResult.d.results.map((result:any)=>{
+                calEvents.push({
+                    id: result.ID,
+                    title: result.Title,
+                    start: result.fAllDayEvent ? formatStartDate(result.EventDate) : result.EventDate,
+                    end: result.fAllDayEvent ? formatEndDate(result.EndDate) : result.EndDate,
+                    allDay: result.fAllDayEvent,
+                    _location: result.Location,
+                    _body: result.Description,
+                    recurr: result.fRecurrence,
+                    recurrData: result.RecurrenceData,
+                    rrule: result.fRecurrence ? parseRecurrentEvent(result.RecurrenceData, formatStartDate(result.EventDate), formatEndDate(result.EndDate)) : null,
+                    color: result.RoomName.ColorCalculated
+                });
+            });
+        }
+    }else{
+        //alert("Calendar Error");
+        return [];
+    }
+        
+    return calEvents;
+};
+
 export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
     if(calSettings.CalType == 'Graph'){
         return getGraphCals(context, calSettings);
+    }else if(calSettings.CalType == 'Room'){
+        return getRoomsCal(context, calSettings);
     }else{
         return getDefaultCals(context, calSettings);
     }
