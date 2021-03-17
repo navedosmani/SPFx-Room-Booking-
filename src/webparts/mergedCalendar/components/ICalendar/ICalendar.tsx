@@ -55,6 +55,17 @@ export default function ICalendar(props:ICalendarProps){
             weekends={props.showWeekends}
             eventClick={props.handleDateClick}
             eventSources = {props.eventSources}
+            
+            // eventContent = {(eventInfo)=>{
+            //   return (
+            //     <div className="aaaaaa">
+            //       <div>{props.showWeekends}</div>
+            //       <b>{eventInfo.timeText}</b>
+            //       <i>{eventInfo.event.title}</i>
+            //     </div>
+            //   )
+            // }}
+
           />
       </div> 
     );
