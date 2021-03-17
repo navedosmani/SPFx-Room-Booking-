@@ -50,7 +50,7 @@ const getColorHex = (colorName:string) : string => {
 
 export const getCalSettings = (context:WebPartContext, listName: string) : Promise <{}[]> => {
     
-    console.log('Get Cal Settings Function');
+    console.log('Get Calendar Settings Function');
 
     let restApiUrl : string = context.pageContext.web.absoluteUrl + "/_api/web/lists/getByTitle('"+listName+"')/items" ,
         calSettings : {}[] = [];
