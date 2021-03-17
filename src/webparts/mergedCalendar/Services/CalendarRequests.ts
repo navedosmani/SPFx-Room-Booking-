@@ -180,7 +180,7 @@ export const getDefaultCals = async (context: WebPartContext, calSettings:{CalTy
     return calEvents;
 };
 
-export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
+export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}, roomId?: number) : Promise <{}[]> => {
     let calUrl :string = resolveCalUrl(context, calSettings.CalType, calSettings.CalURL, calSettings.CalName),
         calEvents : {}[] = [] ;
 
@@ -194,7 +194,7 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
         
     if (_data.ok){
         const calResult = await _data.json();
-        console.log(calResult);
+
         if(calResult){
             calResult.d.results.map((result:any)=>{
                 calEvents.push({
@@ -208,9 +208,14 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
                     recurr: result.fRecurrence,
                     recurrData: result.RecurrenceData,
                     rrule: result.fRecurrence ? parseRecurrentEvent(result.RecurrenceData, formatStartDate(result.EventDate), formatEndDate(result.EndDate)) : null,
-                    color: result.RoomName.ColorCalculated
+                    color: result.RoomName.ColorCalculated,
+                    roomId: result.RoomName.ID,
+                    roomTitle: result.RoomName.Title,
+                    className: roomId ? (roomId == parseInt(result.RoomName.ID) ? 'roomEvent roomID-' + result.RoomName.ID : 'roomEventHidden roomEvent roomID-' + result.RoomName.ID) : 'roomEvent roomID-' + result.RoomName.ID
+                    // className : 'roomEvent roomID-' + result.RoomName.ID
                 });
             });
+            //console.log("calEvents", calEvents);
         }
     }else{
         //alert("Calendar Error");
@@ -220,11 +225,11 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
     return calEvents;
 };
 
-export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}) : Promise <{}[]> => {
+export const getCalsData = (context: WebPartContext, calSettings:{CalType:string, Title:string, CalName:string, CalURL:string}, roomId?: number) : Promise <{}[]> => {
     if(calSettings.CalType == 'Graph'){
         return getGraphCals(context, calSettings);
     }else if(calSettings.CalType == 'Room'){
-        return getRoomsCal(context, calSettings);
+        return getRoomsCal(context, calSettings, roomId);
     }else{
         return getDefaultCals(context, calSettings);
     }
