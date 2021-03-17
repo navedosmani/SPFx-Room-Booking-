@@ -23,7 +23,8 @@
     "properties": {
       "description": "RoomBooking",
       "showWeekends" : false,
-      "calSettingsList" : "CalendarSettings"
+      "calSettingsList" : "CalendarSettings",
+      "roomsList" : "Rooms"
     }
   }]
 }
