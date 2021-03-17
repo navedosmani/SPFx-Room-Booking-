@@ -29,7 +29,10 @@
 .marginT20{
   margin-top: 20px;
 }
-
+.panelBtns{
+  position: absolute;
+  bottom: 20px;
+}
 
 .mergedCalendar {
 
@@ -171,3 +174,5 @@
     
   }
 }
+
+

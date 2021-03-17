@@ -1,0 +1,30 @@
+.roomCard{
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    margin-bottom: 10px;
+    img{
+        float: left;
+        width: 50%;
+    }
+    .roomDetails{
+        float: left;
+        width: 50%;
+        .roomActions{
+            padding: 10px;
+            a{
+                display: block;
+                cursor: pointer;
+            }
+        }
+    }
+    &:after{
+        clear: both;
+        display: block;
+        content: " ";
+    }
+}
+
+
+
+
+
