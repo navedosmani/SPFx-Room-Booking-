@@ -44,6 +44,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [filteredRooms, setFilteredRooms] = React.useState(rooms);
   const [roomSelectedKey, setRoomSelectedKey] = React.useState<string | number | undefined>('all');
   const [locationGroup, setLocationGroup] = React.useState([]);
+  const [periods, setPeriods] = React.useState([]);
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   const roomsList = props.roomsList ? props.roomsList : "Rooms";
@@ -69,8 +70,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       setLocationGroup(results);
     });
     getPeriods(props.context, periodsList).then((results)=>{
-      console.log('periods', results);
-      //setRooms(results);
+      setPeriods(results);
     });
   }, []);
 
@@ -163,6 +163,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [formField, setFormField] = React.useState({
     titleField: "",
     descpField: "",
+    periodField : {key: '', text:''}
   });
   const onChangeFormField = React.useCallback(
     (event: any, newValue?: any) => {   
@@ -175,14 +176,16 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   );
   const [errorMsgField , setErrorMsgField] = React.useState({
     titleField: "",
-    linkField: ""
+    linkField: "",
+    periodField : {key: '', text:''}
   });
   const resetFields = () =>{
     setFormField({
       titleField: "",
       descpField: "",
+      periodField : {key: '', text:''}
     });
-    setErrorMsgField({titleField:"", linkField:""});
+    //setErrorMsgField({titleField:"", linkField:""});
   };
 
   
@@ -258,6 +261,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
             <IRoomBook 
               formField = {formField}
               errorMsgField={errorMsgField} 
+              periodOptions = {periods}
               onChangeFormField={onChangeFormField}
             />
             <div className={styles.panelBtns}>

@@ -9,7 +9,6 @@ export const getRooms = async (context: WebPartContext, roomsList: string) =>{
     return results.value;
 };
 
-
 export const getLocationGroup = async(context: WebPartContext, roomsList: string) =>{
     console.log("Get Rooms Location Group Function");
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/GetByTitle('${roomsList}')/fields?$filter=EntityPropertyName eq 'LocationGroup'`;
@@ -25,6 +24,29 @@ const adjustLocation = (arr: []): {}[] =>{
         arrAdj.push({
             key: item.toLowerCase(),
             text: item
+        })
+    });
+
+    return arrAdj;
+};
+
+export const getPeriods = async (context: WebPartContext, periodsList: string) =>{
+    console.log("Get Periods Function");
+    const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${periodsList}')/items?$orderBy=SortOrder asc`;
+    const results = await context.spHttpClient.get(restUrl, SPHttpClient.configurations.v1).then(response => response.json());
+
+    return adjustPeriods(results.value);
+};
+const adjustPeriods = (arr: []): {}[] =>{
+    let arrAdj :{}[] = [];
+
+    arr.map((item: any)=>{
+        arrAdj.push({
+            key: item.Id,
+            text: item.Title,
+            start: item.StartTime,
+            end: item.EndTime,
+            order: item.SortOrder
         })
     });
 

@@ -31,7 +31,7 @@ export default function IRoomBook (props:IRoomBookProps) {
         closeButtonAriaLabel: 'Close date picker',
         monthPickerHeaderAriaLabel: '{0}, select to change the year',
         yearPickerHeaderAriaLabel: '{0}, select to change the month',
-      };
+    };
 
     const stackTokens = { childrenGap: 50 };
     const [firstDayOfWeek, setFirstDayOfWeek] = React.useState(DayOfWeek.Sunday);
@@ -45,7 +45,6 @@ export default function IRoomBook (props:IRoomBookProps) {
         { key: '230am', text: '2:30 AM' },
         { key: '3am', text: '3:00 AM' },
     ];
-    const [selectedItem, setSelectedItem] = React.useState<IDropdownOption>();
 
     const [selectedKey, setSelectedKey] = React.useState<string | number | undefined>('10:00');
     const onChange1 = (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption): void => {
@@ -76,14 +75,15 @@ export default function IRoomBook (props:IRoomBookProps) {
                         value={props.formField.descpField} 
                         onChange={props.onChangeFormField}
                     />   
-                    {/* <Dropdown 
-                        placeholder="Select a period" id="periodField"
+                    <Dropdown 
+                        placeholder="Select a period" 
+                        id="periodField"
                         label="Period" 
-                        selectedKey={props.formField.descpField ? props.formField.descpField.key : undefined}
+                        required
+                        selectedKey={props.formField.periodField ? props.formField.periodField.key : undefined}
                         options={props.periodOptions} 
-                        styles={dropdownStyles}
                         onChange={props.onChangeFormField} 
-                    /> */}
+                    />
                     <DatePicker
                         firstDayOfWeek={firstDayOfWeek}
                         strings={DayPickerStrings}
@@ -95,10 +95,12 @@ export default function IRoomBook (props:IRoomBookProps) {
                         label="Start Time"
                         autoComplete="on"
                         options={items}
+                        required
                         onChange={onChange1}
                     />
                     <ComboBox
                         selectedKey={selectedKey}
+                        required
                         label="End Time"
                         autoComplete="on"
                         options={items}
@@ -108,5 +110,4 @@ export default function IRoomBook (props:IRoomBookProps) {
             </Stack>
         </div>
     );
-
 }
