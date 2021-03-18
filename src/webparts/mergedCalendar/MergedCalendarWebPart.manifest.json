@@ -17,14 +17,16 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "SPFxRoomBooking" },
+    "title": { "default": "Peel Room Booking System" },
     "description": { "default": "SPFx RoomBooking description" },
     "officeFabricIconFontName": "Page",
     "properties": {
       "description": "RoomBooking",
       "showWeekends" : false,
       "calSettingsList" : "CalendarSettings",
-      "roomsList" : "Rooms"
+      "roomsList" : "Rooms",
+      "periodsList" : "Periods",
+      "guidelinesList" : "Guidelines"
     }
   }]
 }

@@ -8,4 +8,6 @@ export interface IMergedCalendarProps {
   calSettingsList: string;
   dpdOptions: IDropdownOption[];
   roomsList: string;
+  periodsList: string;
+  guidelinesList: string;
 }

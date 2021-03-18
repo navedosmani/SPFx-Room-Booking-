@@ -21,6 +21,8 @@ export interface IMergedCalendarWebPartProps {
   showWeekends: boolean;
   calSettingsList: string;
   roomsList: string;
+  periodsList: string;
+  guidelinesList: string;
 }
 
 export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMergedCalendarWebPartProps> {
@@ -34,6 +36,8 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
         context: this.context,
         calSettingsList: this.properties.calSettingsList,
         roomsList: this.properties.roomsList,
+        periodsList: this.properties.periodsList,
+        guidelinesList: this.properties.guidelinesList,
         dpdOptions : [
           { key: 'E1Day', text: '1 Day Cycle' },
           { key: 'E2Day', text: '2 Day Cycle' },
@@ -150,7 +154,22 @@ export default class MergedCalendarWebPart extends BaseClientSideWebPart<IMerged
                 }),
                 PropertyPaneCheckbox('showWeekends', {
                   text: "Show Weekends"
-                })
+                }),
+                PropertyPaneDropdown('roomsList', {
+                  label : 'Rooms List',
+                  options: this.lists,
+                  selectedKey : 'Rooms'
+                }),
+                PropertyPaneDropdown('periodsList', {
+                  label : 'Periods List',
+                  options: this.lists,
+                  selectedKey : 'Periods'
+                }),
+                PropertyPaneDropdown('guidelinesList', {
+                  label : 'Guidelines List',
+                  options: this.lists,
+                  selectedKey : 'Guidelines'
+                }),
               ]
             }
           ]
