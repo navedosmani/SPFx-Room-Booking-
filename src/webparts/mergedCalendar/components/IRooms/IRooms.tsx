@@ -8,15 +8,7 @@ export default function IRooms (props:IRoomsProps) {
         props.rooms.map((room: any)=>{
             return(
                 <IRoom key = {room.Id}
-                    capacity = {room.Capacity}
-                    color = {room.Colour}
-                    facilities = {room.facilities}
-                    id = {room.Id}
-                    locationGroup = {room.LocationGroup}
-                    title = {room.Title}
-                    img ={room.Photo0}
-                    period = {room.Period_x0020__x0023_}
-                    comments = {room.OData__Comments}
+                    roomInfo = {room}
                     onCheckAvailClick = {props.onCheckAvailClick(room.Id)}
                     onViewDetailsClick = {props.onViewDetailsClick(room)}
                     onBookClick = {props.onBookClick(room)}
