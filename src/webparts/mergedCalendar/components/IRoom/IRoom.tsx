@@ -25,7 +25,7 @@ export default function IRoom (props:IRoomProps) {
                     <a onClick={() => props.onBookClick(props)}>Reserve Now</a>
                     <a onClick={() => props.onCheckAvailClick(props.id)}>Check Availability</a>
                     {/* <a onClick={() => onCheckAvailClick(props.id)}>Check Availability - NO CALL</a> */}
-                    <label>Color <span>{props.color}</span></label>
+                    <label>Color <span style={{backgroundColor: props.color}}>{props.color}</span></label>
                 </div>
             </div>
         </div> 
