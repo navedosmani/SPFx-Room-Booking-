@@ -3,7 +3,7 @@ import styles from './MergedCalendar.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, PrimaryButton, Panel} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -11,7 +11,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -20,11 +20,13 @@ import IDialog from './IDialog/IDialog';
 import IRooms from './IRooms/IRooms';
 import IRoomBook from './IRoomBook/IRoomBook';
 import IRoomDetails from './IRoomDetails/IRoomDetails';
+import IRoomDropdown from './IRoomDropdown/IRoomDropdown';
 
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
   const _calendarOps = new CalendarOperations();
   const [eventSources, setEventSources] = React.useState([]);
+  // const [filteredEventSources, setFilteredEventSources] = React.useState(eventSources);
   const [calSettings, setCalSettings] = React.useState([]);
   const [eventDetails, setEventDetails] = React.useState({});
 
@@ -39,9 +41,14 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [roomInfo, setRoomInfo] = React.useState({});
   const [isOpenDetails, { setTrue: openPanelDetails, setFalse: dismissPanelDetails }] = useBoolean(false);
   const [isOpenBook, { setTrue: openPanelBook, setFalse: dismissPanelBook }] = useBoolean(false);
+  const [filteredRooms, setFilteredRooms] = React.useState(rooms);
+  const [roomSelectedKey, setRoomSelectedKey] = React.useState<string | number | undefined>('all');
+  const [locationGroup, setLocationGroup] = React.useState([]);
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   const roomsList = props.roomsList ? props.roomsList : "Rooms";
+  const periodsList = props.periodsList ? props.periodsList : "Periods";
+  const guidelinesList = props.guidelinesList ? props.guidelinesList : "Guidelines";
   
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
@@ -53,9 +60,30 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });*/
     getRooms(props.context, roomsList).then((results)=>{
       setRooms(results);
+      setFilteredRooms(results);
     });
   },[eventSources.length, roomId]);
 
+  React.useEffect(()=>{
+    getLocationGroup(props.context, roomsList).then((results)=>{
+      setLocationGroup(results);
+    });
+    getPeriods(props.context, periodsList).then((results)=>{
+      console.log('periods', results);
+      //setRooms(results);
+    });
+  }, []);
+
+
+  // React.useEffect(()=>{
+  //   if(roomId) {
+
+  //     setFilteredEventSources(eventSources.filter((event) => {event.roomId == }))
+  //   } else {
+  //     setFilteredEventSources(eventSources);
+  //   }
+    
+  // },[eventSources.length, roomId]);
 
   const chkHandleChange = (newCalSettings:{})=>{    
     return (ev: any, checked: boolean) => { 
@@ -102,6 +130,16 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
   };
 
+  //Filter Rooms
+  const onFilterChanged = (ev: React.FormEvent<IComboBox>, option?: IComboBoxOption): void => {
+    setRoomSelectedKey(option.key);
+    if(option.key === 'all'){
+      setFilteredRooms(rooms);
+    }else{
+      setFilteredRooms(rooms.filter(room => room.LocationGroup.toLowerCase().indexOf(option.text.toLowerCase()) >= 0));
+    }
+  };
+
   //Rooms
   const onCheckAvailClick = (roomId: number) =>{
     setRoomId(roomId);
@@ -115,13 +153,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     openPanelDetails();
   };
   const onBookClick = (roomInfo: any) =>{
-      setRoomInfo(roomInfo);
-      dismissPanelDetails();
-      openPanelBook();
+    setRoomInfo(roomInfo);
+    dismissPanelDetails();
+    openPanelBook();
   };
 
 
-
+  //Booking Forms
   const [formField, setFormField] = React.useState({
     titleField: "",
     descpField: "",
@@ -147,13 +185,20 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     setErrorMsgField({titleField:"", linkField:""});
   };
 
+  
+
   return(
     <div className={styles.mergedCalendar}>
 
       <div style={{float:'left', width: '28%'}}> 
+        <IRoomDropdown 
+          onFilterChanged={onFilterChanged}
+          roomSelectedKey={roomSelectedKey}
+          locationGroup = {locationGroup}
+        />
         <a onClick={onResetRoomsClick}>Reset Rooms</a>
         <IRooms 
-          rooms={rooms} 
+          rooms={filteredRooms} 
           onCheckAvailClick={() => onCheckAvailClick} 
           onBookClick={()=> onBookClick}
           onViewDetailsClick={()=>onViewDetailsClick}
@@ -162,6 +207,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
       <div style={{float:'left', width: '70%', marginLeft: '2%'}}>
         <ICalendar 
+          // eventSources={filteredEventSources} 
           eventSources={eventSources} 
           showWeekends={showWeekends}
           openPanel={openPanel}
