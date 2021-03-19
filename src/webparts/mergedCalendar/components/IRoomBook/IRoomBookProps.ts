@@ -5,4 +5,5 @@ export interface IRoomBookProps{
     errorMsgField: any;
     onChangeFormField: any;
     periodOptions: any;
+    roomInfo: any;
 }

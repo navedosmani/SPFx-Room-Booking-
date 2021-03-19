@@ -141,19 +141,19 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   };
 
   //Rooms
-  const onCheckAvailClick = (roomId: number) =>{
-    setRoomId(roomId);
+  const onCheckAvailClick = (roomIdParam: number) =>{
+    setRoomId(roomIdParam);
   };
   const onResetRoomsClick = ()=>{
     setRoomId(null);
   };
-  const onViewDetailsClick = (roomInfo: any) =>{
-    setRoomInfo(roomInfo);
+  const onViewDetailsClick = (roomInfoParam: any) =>{
+    setRoomInfo(roomInfoParam);
     dismissPanelBook();
     openPanelDetails();
   };
-  const onBookClick = (roomInfo: any) =>{
-    setRoomInfo(roomInfo);
+  const onBookClick = (bookingInfoParam: any) =>{
+    setRoomInfo(bookingInfoParam.roomInfo);
     dismissPanelDetails();
     openPanelBook();
   };
@@ -163,17 +163,26 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [formField, setFormField] = React.useState({
     titleField: "",
     descpField: "",
-    periodField : {key: '', text:''}
+    periodField : {key: '', text:''},
+    dateField : "",
+    startHrField : {key:'12 AM', text: '12 AM'},
+    startMinField : {key:'00', text: '00'},
+    endHrField : {key:'12 AM', text: '12 AM'},
+    endMinField : {key:'00', text: '00'},
   });
-  const onChangeFormField = React.useCallback(
-    (event: any, newValue?: any) => {   
+  const onChangeFormField = (formFieldParam: string) =>{
+    return (event: any, newValue?: any)=>{
+      //Note to self
+      //(newValue === undefined && typeof event === "object") //this is for date
+      //for date, there is no 2nd param, the newValue is the main one
+      //typeof newValue === "boolean" //this one for toggle buttons
       setFormField({
         ...formField,
-        [event.target.id]: typeof newValue === "boolean" ? !!newValue : newValue || ''
+        [formFieldParam]: (newValue === undefined && typeof event === "object") ? event : (typeof newValue === "boolean" ? !!newValue : newValue || '')
       });
-    },
-    [formField],
-  );
+    }
+  };
+
   const [errorMsgField , setErrorMsgField] = React.useState({
     titleField: "",
     linkField: "",
@@ -183,7 +192,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     setFormField({
       titleField: "",
       descpField: "",
-      periodField : {key: '', text:''}
+      periodField : {key: '', text:''},
+      dateField: "",
+      startHrField : {key:'12 AM', text: '12 AM'},
+      startMinField : {key:'00', text: '00'},
+      endHrField : {key:'12 AM', text: '12 AM'},
+      endMinField : {key:'00', text: '00'},
     });
     //setErrorMsgField({titleField:"", linkField:""});
   };
@@ -248,7 +262,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         isBlocking={false}>
             <IRoomDetails roomInfo={roomInfo} />
             <div className={styles.panelBtns}>
-              <DefaultButton onClick={dismissPanelDetails} text="Cancel" />
+              <DefaultButton className={styles.marginL10} onClick={dismissPanelDetails} text="Cancel" />
             </div>
       </Panel>
       <Panel
@@ -263,10 +277,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
               errorMsgField={errorMsgField} 
               periodOptions = {periods}
               onChangeFormField={onChangeFormField}
+              roomInfo={roomInfo}
             />
             <div className={styles.panelBtns}>
               <PrimaryButton text="Book" />
-              <DefaultButton onClick={dismissPanelBook} text="Cancel" />
+              <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
             </div>
       </Panel>
 
