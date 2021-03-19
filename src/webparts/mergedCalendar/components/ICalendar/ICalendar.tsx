@@ -30,7 +30,7 @@ export default function ICalendar(props:ICalendarProps){
               },
               addEventBtn : {
                 text: 'Add Event',
-                click : function(){
+                click : ()=>{
                   window.open(
                     props.context.pageContext.web.absoluteUrl + '/_layouts/15/Event.aspx?ListGuid='+ props.listGUID +'&Mode=Edit',
                     '_blank' 
