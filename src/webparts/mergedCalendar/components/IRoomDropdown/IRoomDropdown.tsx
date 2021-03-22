@@ -1,13 +1,13 @@
 import * as React from 'react';
 import styles from '../Room.module.scss';
-import {IComboBoxOption, ComboBox, IComboBox} from '@fluentui/react';
+import {ComboBox} from '@fluentui/react';
 
 import { IRoomDropdownProps } from './IRoomDropdownProps';
 
 export default function IRoomDropdown (props: IRoomDropdownProps){
     
     return(
-        <div>
+        <div className={styles.roomsFilter}>
             <ComboBox
                 selectedKey={props.roomSelectedKey}
                 label="Select Location"
