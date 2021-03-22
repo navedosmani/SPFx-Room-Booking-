@@ -52,3 +52,11 @@ export const getPeriods = async (context: WebPartContext, periodsList: string) =
 
     return adjustPeriods(results.value);
 };
+
+export const getGuidelines = async (context: WebPartContext, guidelinesList: string) =>{
+    console.log("Get Guidelines Function");
+    const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${guidelinesList}')/items`;
+    const results = await context.spHttpClient.get(restUrl, SPHttpClient.configurations.v1).then(response => response.json());
+
+    return results.value;
+};

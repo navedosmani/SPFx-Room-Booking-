@@ -1,9 +1,10 @@
 import * as React from 'react';
 import styles from './MergedCalendar.module.scss';
+import roomStyles from './Room.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -11,7 +12,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms, getPeriods, getLocationGroup} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup, getGuidelines} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -21,6 +22,7 @@ import IRooms from './IRooms/IRooms';
 import IRoomBook from './IRoomBook/IRoomBook';
 import IRoomDetails from './IRoomDetails/IRoomDetails';
 import IRoomDropdown from './IRoomDropdown/IRoomDropdown';
+import IRoomGuidelines from './IRoomGuidelines/IRoomGuidelines';
 
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
@@ -45,6 +47,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [roomSelectedKey, setRoomSelectedKey] = React.useState<string | number | undefined>('all');
   const [locationGroup, setLocationGroup] = React.useState([]);
   const [periods, setPeriods] = React.useState([]);
+  const [guidelines, setGuidelines] = React.useState([]);
+
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   const roomsList = props.roomsList ? props.roomsList : "Rooms";
@@ -72,18 +76,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     getPeriods(props.context, periodsList).then((results)=>{
       setPeriods(results);
     });
+    getGuidelines(props.context, guidelinesList).then((results)=>{
+      setGuidelines(results);
+    });
   }, []);
-
-
-  // React.useEffect(()=>{
-  //   if(roomId) {
-
-  //     setFilteredEventSources(eventSources.filter((event) => {event.roomId == }))
-  //   } else {
-  //     setFilteredEventSources(eventSources);
-  //   }
-    
-  // },[eventSources.length, roomId]);
 
   const chkHandleChange = (newCalSettings:{})=>{    
     return (ev: any, checked: boolean) => { 
@@ -180,7 +176,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         ...formField,
         [formFieldParam]: (newValue === undefined && typeof event === "object") ? event : (typeof newValue === "boolean" ? !!newValue : newValue || '')
       });
-    }
+    };
   };
 
   const [errorMsgField , setErrorMsgField] = React.useState({
@@ -201,19 +197,18 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
     //setErrorMsgField({titleField:"", linkField:""});
   };
-
   
 
   return(
     <div className={styles.mergedCalendar}>
 
       <div style={{float:'left', width: '28%'}}> 
+      
         <IRoomDropdown 
           onFilterChanged={onFilterChanged}
           roomSelectedKey={roomSelectedKey}
           locationGroup = {locationGroup}
         />
-        <a onClick={onResetRoomsClick}>Reset Rooms</a>
         <IRooms 
           rooms={filteredRooms} 
           onCheckAvailClick={() => onCheckAvailClick} 
@@ -222,6 +217,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         />
       </div>
 
+      <div style={{float:'left', width: '70%', marginLeft: '2%', position: 'relative'}}>
       <div style={{float:'left', width: '70%', marginLeft: '2%'}}>
         <ICalendar 
           // eventSources={filteredEventSources} 
@@ -244,7 +240,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         dismissPanel = {dismissPanel}
         isDataLoading = {isDataLoading} 
         showWeekends= {showWeekends} 
-        onChkViewChange= {chkViewHandleChange}/>
+        onChkViewChange= {chkViewHandleChange}
+        />
 
       <IDialog 
         hideDialog={hideDialog} 
@@ -259,7 +256,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         headerText="Room Details"
         closeButtonAriaLabel="Close"
         isFooterAtBottom={true}
-        isBlocking={false}>
+        isBlocking={false}
+        // isLightDismiss={true}
+        >
             <IRoomDetails roomInfo={roomInfo} />
             <div className={styles.panelBtns}>
               <DefaultButton className={styles.marginL10} onClick={dismissPanelDetails} text="Cancel" />
@@ -272,17 +271,28 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         closeButtonAriaLabel="Close"
         isFooterAtBottom={true}
         isBlocking={false}>
-            <IRoomBook 
-              formField = {formField}
-              errorMsgField={errorMsgField} 
-              periodOptions = {periods}
-              onChangeFormField={onChangeFormField}
-              roomInfo={roomInfo}
-            />
-            <div className={styles.panelBtns}>
-              <PrimaryButton text="Book" />
-              <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
-            </div>
+         
+          <MessageBar
+            messageBarType={MessageBarType.warning}
+            isMultiline={false}
+            truncated={true}
+            overflowButtonAriaLabel="See more"
+          > 
+            <IRoomGuidelines guidelines = {guidelines} /> 
+          </MessageBar>
+
+        <IRoomBook 
+          formField = {formField}
+          errorMsgField={errorMsgField} 
+          periodOptions = {periods}
+          onChangeFormField={onChangeFormField}
+          roomInfo={roomInfo}
+        />
+        
+        <div className={styles.panelBtns}>
+          <PrimaryButton text="Book" />
+          <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
+        </div>
       </Panel>
 
 
