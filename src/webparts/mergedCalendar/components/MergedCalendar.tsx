@@ -48,6 +48,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [locationGroup, setLocationGroup] = React.useState([]);
   const [periods, setPeriods] = React.useState([]);
   const [guidelines, setGuidelines] = React.useState([]);
+  const [isFiltered, { setTrue: showFilterWarning, setFalse: hideFilterWarning }] = useBoolean(false);
 
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
@@ -139,9 +140,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   //Rooms
   const onCheckAvailClick = (roomIdParam: number) =>{
     setRoomId(roomIdParam);
+    showFilterWarning();
   };
   const onResetRoomsClick = ()=>{
     setRoomId(null);
+    hideFilterWarning();
   };
   const onViewDetailsClick = (roomInfoParam: any) =>{
     setRoomInfo(roomInfoParam);
@@ -218,7 +221,21 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       </div>
 
       <div style={{float:'left', width: '70%', marginLeft: '2%', position: 'relative'}}>
-      <div style={{float:'left', width: '70%', marginLeft: '2%'}}>
+        {isFiltered &&
+          <div className={roomStyles.filterWarning}>
+            <MessageBar
+              messageBarType={MessageBarType.warning}
+              isMultiline={false}
+              actions={
+              <div>
+                  <MessageBarButton onClick={onResetRoomsClick}>Reset Filter</MessageBarButton>
+              </div>
+              }
+            >
+              Please note that you are not viewing all rooms now. Click 'Reset Filter' to view all.
+            </MessageBar>
+          </div>
+        }
         <ICalendar 
           // eventSources={filteredEventSources} 
           eventSources={eventSources} 
