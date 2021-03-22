@@ -4,7 +4,7 @@ import roomStyles from './Room.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -12,7 +12,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms, getPeriods, getLocationGroup, getGuidelines} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -49,7 +49,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [periods, setPeriods] = React.useState([]);
   const [guidelines, setGuidelines] = React.useState([]);
   const [isFiltered, { setTrue: showFilterWarning, setFalse: hideFilterWarning }] = useBoolean(false);
-
+  const [roomsCalendar, setRoomsCalendar] = React.useState('Events');
 
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   const roomsList = props.roomsList ? props.roomsList : "Rooms";
@@ -58,6 +58,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   
   React.useEffect(()=>{
     _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
+      setRoomsCalendar(getRoomsCalendarName(results[0]));
       setCalSettings(results[0]);
       setEventSources(results[1]);
     });
@@ -200,6 +201,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
     //setErrorMsgField({titleField:"", linkField:""});
   };
+
+  const getRoomFormFields = ()=>{
+    addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
+      dismissPanelBook();
+    });
+  };
   
 
   return(
@@ -283,12 +290,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       </Panel>
       <Panel
         isOpen={isOpenBook}
+        type={PanelType.medium}
         onDismiss={dismissPanelBook}
         headerText="Book Room"
         closeButtonAriaLabel="Close"
         isFooterAtBottom={true}
         isBlocking={false}>
-         
           <MessageBar
             messageBarType={MessageBarType.warning}
             isMultiline={false}
@@ -297,7 +304,6 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           > 
             <IRoomGuidelines guidelines = {guidelines} /> 
           </MessageBar>
-
         <IRoomBook 
           formField = {formField}
           errorMsgField={errorMsgField} 
@@ -307,7 +313,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         />
         
         <div className={styles.panelBtns}>
-          <PrimaryButton text="Book" />
+          <PrimaryButton text="Book" onClick={getRoomFormFields}/>
           <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
         </div>
       </Panel>
