@@ -1,10 +1,20 @@
 .roomCard{
     border: 1px solid #ddd;
-    border-radius: 2px;
+    border-radius: 3px;
     margin-bottom: 10px;
+    h3{
+        margin: 0;
+        padding: 5px 10px;
+        border-bottom: 1px solid #ddd;
+        background: #eee;
+        font-weight: 600;
+    }
     img{
         float: left;
-        width: 50%;
+        // width: 40%;
+        width: 140px;
+        height: 120px;
+        border-radius: 0 0 0 3px;
     }
     .roomDetails{
         float: left;
@@ -14,6 +24,17 @@
             a{
                 display: block;
                 cursor: pointer;
+                margin-bottom: 7px;
+                i{
+                    color: #0078d4;
+                    margin-right: 5px;
+                }
+                span{
+                    color: #0078d4;
+                    &:hover{
+                        text-decoration: underline;
+                    }
+                }
             }
         }
     }
@@ -34,7 +55,6 @@
         background: transparent!important;
         font-size: 12px;
         font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
-        // color: #fff;
     }
     ol, ul{
         padding-left: 15px;
@@ -49,6 +69,13 @@
 }
 
 .roomsFilter{
-    margin-bottom: 10px;
+    margin-bottom: 22px;
+    margin-top: -26px;
 }
 
+.roomBullet{
+    width: 10px;
+    height: 10px;
+    display: inline-block;
+    border-radius: 3px;
+}
