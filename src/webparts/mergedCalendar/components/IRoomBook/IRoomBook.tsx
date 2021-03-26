@@ -1,8 +1,10 @@
 import * as React from 'react';
-import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox} from '@fluentui/react';
+import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox, Text} from '@fluentui/react';
 import styles from '../Room.module.scss';
 import { IRoomBookProps } from './IRoomBookProps';
 import { Label } from 'office-ui-fabric-react';
+import {getChosenDate} from '../../Services/RoomOperations';
+import * as moment from 'moment';
 
 export default function IRoomBook (props:IRoomBookProps) {
 
@@ -103,8 +105,10 @@ export default function IRoomBook (props:IRoomBookProps) {
                         selectedKey={props.formField.periodField ? props.formField.periodField.key : undefined}
                         options={props.periodOptions} 
                         onChange={props.onChangeFormField('periodField')} 
+                        errorMessage={props.errorMsgField.periodField} 
                     />
                     <DatePicker
+                        isRequired={true}
                         firstDayOfWeek={firstDayOfWeek}
                         strings={DayPickerStrings}
                         label="Date"
@@ -112,8 +116,20 @@ export default function IRoomBook (props:IRoomBookProps) {
                         onSelectDate={props.onChangeFormField('dateField')}
                         value={props.formField.dateField}
                     />
-                    <Label>Start Time</Label>
-                    <Stack horizontal tokens={stackTokens}>
+                    <TextField 
+                        label='Start Time' 
+                        readOnly
+                        disabled
+                        value={moment(getChosenDate(props.formField.periodField.start, props.formField.periodField.end, props.formField.dateField)[0]).format('hh:mm A')}
+                    />
+                    <TextField 
+                        label='End Time' 
+                        readOnly
+                        disabled
+                        value={moment(getChosenDate(props.formField.periodField.start, props.formField.periodField.end, props.formField.dateField)[1]).format('hh:mm A')}
+                    />
+                    {/*<Label>Start Time</Label>
+                     <Stack horizontal tokens={stackTokens}>
                         <Stack>
                             <ComboBox
                                 selectedKey={props.formField.startHrField ? props.formField.startHrField.key : undefined}
@@ -130,9 +146,9 @@ export default function IRoomBook (props:IRoomBookProps) {
                                 onChange={props.onChangeFormField('startMinField')}
                             />
                         </Stack>
-                    </Stack>
-                    <Label>End Time</Label>
-                    <Stack horizontal tokens={stackTokens}>
+                    </Stack> */}
+                    {/*<Label>End Time</Label>
+                     <Stack horizontal tokens={stackTokens}>
                         <Stack>
                             <ComboBox
                                 selectedKey={props.formField.endHrField ? props.formField.endHrField.key : undefined}
@@ -151,7 +167,7 @@ export default function IRoomBook (props:IRoomBookProps) {
                                 onChange={props.onChangeFormField('endMinField')}
                             />
                         </Stack>
-                    </Stack>
+                    </Stack> */}
                 </Stack>
             </Stack>
         </div>

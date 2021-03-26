@@ -12,7 +12,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, getChosenDate} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -28,7 +28,6 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   
   const _calendarOps = new CalendarOperations();
   const [eventSources, setEventSources] = React.useState([]);
-  // const [filteredEventSources, setFilteredEventSources] = React.useState(eventSources);
   const [calSettings, setCalSettings] = React.useState([]);
   const [eventDetails, setEventDetails] = React.useState({});
 
@@ -50,7 +49,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [guidelines, setGuidelines] = React.useState([]);
   const [isFiltered, { setTrue: showFilterWarning, setFalse: hideFilterWarning }] = useBoolean(false);
   const [roomsCalendar, setRoomsCalendar] = React.useState('Events');
-
+  
   const calSettingsList = props.calSettingsList ? props.calSettingsList : "CalendarSettings";
   const roomsList = props.roomsList ? props.roomsList : "Rooms";
   const periodsList = props.periodsList ? props.periodsList : "Periods";
@@ -113,10 +112,9 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       toggleshowWeekends();
       toggleIsDataLoading();
     });
-    
   };
   const handleDateClick = (arg:any) =>{
-    //console.log(arg);
+    //console.log("arg", arg);
     //console.log(formatEvDetails(arg));
     setEventDetails(formatEvDetails(arg));
     toggleHideDialog();
@@ -126,6 +124,70 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     addToMyGraphCal(props.context).then((result)=>{
       console.log('calendar updated', result);
     });
+  };
+
+
+  //Booking Forms states
+  const [formField, setFormField] = React.useState({
+    titleField: "",
+    descpField: "",
+    periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
+    dateField : new Date(),
+    
+    startHrField : {key:'12 AM', text: '12 AM'},
+    startMinField : {key:'00', text: '00'},
+    endHrField : {key:'12 AM', text: '12 AM'},
+    endMinField : {key:'00', text: '00'},
+  });
+  const onChangeFormField = (formFieldParam: string) =>{
+    return (event: any, newValue?: any)=>{
+      //Note to self
+      //(newValue === undefined && typeof event === "object") //this is for date
+      //for date, there is no 2nd param, the newValue is the main one
+      //typeof newValue === "boolean" //this one for toggle buttons
+      setFormField({
+        ...formField,
+        [formFieldParam]: (newValue === undefined && typeof event === "object") ? event : (typeof newValue === "boolean" ? !!newValue : newValue || ''),
+      });
+    };
+  };
+  
+  //error handeling
+  const [errorMsgField , setErrorMsgField] = React.useState({
+    titleField: "",
+    periodField : "",
+  });
+  const resetFields = () =>{
+    setFormField({
+    titleField: "",
+    descpField: "",
+    periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
+    dateField : new Date(),
+    
+    startHrField : {key:'12 AM', text: '12 AM'},
+    startMinField : {key:'00', text: '00'},
+    endHrField : {key:'12 AM', text: '12 AM'},
+    endMinField : {key:'00', text: '00'},
+    });
+    setErrorMsgField({
+      titleField: "",
+      periodField : "",
+    });
+  };
+  const handleError = (callback:any) =>{
+    if (formField.titleField == "" && formField.periodField.key == ""){
+      setErrorMsgField({titleField: "Title Field Required", periodField: "Period Field Required"});
+    }
+    else if (formField.titleField == ""){
+      setErrorMsgField({titleField: "Title Field Required", periodField: ""});
+    }
+    else if (formField.periodField.key == ""){
+      setErrorMsgField({titleField: "", periodField: "Period Field Required"});
+    }
+    else{
+      setErrorMsgField({titleField: "", periodField: ""});
+      callback();
+    }
   };
 
   //Filter Rooms
@@ -138,7 +200,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     }
   };
 
-  //Rooms
+  //Rooms functions
   const onCheckAvailClick = (roomIdParam: number) =>{
     setRoomId(roomIdParam);
     showFilterWarning();
@@ -153,61 +215,25 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     openPanelDetails();
   };
   const onBookClick = (bookingInfoParam: any) =>{
+    resetFields();
     setRoomInfo(bookingInfoParam.roomInfo);
     dismissPanelDetails();
     openPanelBook();
   };
 
-
-  //Booking Forms
-  const [formField, setFormField] = React.useState({
-    titleField: "",
-    descpField: "",
-    periodField : {key: '', text:''},
-    dateField : "",
-    startHrField : {key:'12 AM', text: '12 AM'},
-    startMinField : {key:'00', text: '00'},
-    endHrField : {key:'12 AM', text: '12 AM'},
-    endMinField : {key:'00', text: '00'},
-  });
-  const onChangeFormField = (formFieldParam: string) =>{
-    return (event: any, newValue?: any)=>{
-      //Note to self
-      //(newValue === undefined && typeof event === "object") //this is for date
-      //for date, there is no 2nd param, the newValue is the main one
-      //typeof newValue === "boolean" //this one for toggle buttons
-      setFormField({
-        ...formField,
-        [formFieldParam]: (newValue === undefined && typeof event === "object") ? event : (typeof newValue === "boolean" ? !!newValue : newValue || '')
-      });
-    };
-  };
-
-  const [errorMsgField , setErrorMsgField] = React.useState({
-    titleField: "",
-    linkField: "",
-    periodField : {key: '', text:''}
-  });
-  const resetFields = () =>{
-    setFormField({
-      titleField: "",
-      descpField: "",
-      periodField : {key: '', text:''},
-      dateField: "",
-      startHrField : {key:'12 AM', text: '12 AM'},
-      startMinField : {key:'00', text: '00'},
-      endHrField : {key:'12 AM', text: '12 AM'},
-      endMinField : {key:'00', text: '00'},
-    });
-    //setErrorMsgField({titleField:"", linkField:""});
-  };
-
+  //when clicking on the book button in the panel
   const getRoomFormFields = ()=>{
-    addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
-      dismissPanelBook();
-    });
+    handleError(()=>{
+      addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
+        dismissPanelBook();
+        _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
+          setRoomsCalendar(getRoomsCalendarName(results[0]));
+          setCalSettings(results[0]);
+          setEventSources(results[1]);
+        });
+      });
+    })
   };
-  
 
   return(
     <div className={styles.mergedCalendar}>
