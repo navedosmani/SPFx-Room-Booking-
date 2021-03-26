@@ -40,7 +40,11 @@ export const formatEvDetails = (ev:any) : {} =>{
         AllDay: event.allDay,
         Recurr: event._def.extendedProps.recurr,
         RecurrData: event._def.extendedProps.recurrData,
-        RecurringDef: event._def.extendedProps.recurringDef
+        RecurringDef: event._def.extendedProps.recurringDef,
+        Room: event._def.extendedProps.roomTitle,
+        Status: event._def.extendedProps.status,
+        Period: event._def.extendedProps.period,
+        Color: event.backgroundColor
     };
 
     return evDetails;

@@ -31,7 +31,11 @@ export default function IDialog(props:IDialogProps){
                 AllDay = {props.eventDetails.AllDay}
                 Body = {props.eventDetails.Body}
                 Location = {props.eventDetails.Location}       
-                handleAddtoCal = {props.handleAddtoCal}         
+                handleAddtoCal = {props.handleAddtoCal}   
+                Room={props.eventDetails.Room}    
+                Status={props.eventDetails.Status}
+                Period={props.eventDetails.Period}  
+                Color={props.eventDetails.Color}
             />
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />

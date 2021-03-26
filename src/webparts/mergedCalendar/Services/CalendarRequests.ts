@@ -10,7 +10,7 @@ const resolveCalUrl = (context: WebPartContext, calType:string, calUrl:string, c
         azurePeelSchoolsUrl :string = "https://pdsb1.azure-api.net/peelschools",
         restApiUrl :string = "/_api/web/lists/getByTitle('"+calName+"')/items",
         restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$orderby=EventDate desc&$top=300",
-        restApiParamsRoom: string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData,RoomName/ColorCalculated,RoomName/ID,RoomName/Title&$expand=RoomName&$orderby=EventDate desc&$top=300";
+        restApiParamsRoom: string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData,Status,RoomName/ColorCalculated,RoomName/ID,RoomName/Title,Periods/EndTime,Periods/Title,Periods/StartTime&$expand=RoomName,Periods&$orderby=EventDate desc&$top=300";
         //restApiParams :string = "?$select=ID,Title,EventDate,EndDate,Location,Description,fAllDayEvent,fRecurrence,RecurrenceData&$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'";
         //$filter=EventDate ge datetime'2019-08-01T00%3a00%3a00'
 
@@ -195,6 +195,8 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
     if (_data.ok){
         const calResult = await _data.json();
 
+        console.log("calResult", calResult);
+
         if(calResult){
             calResult.d.results.map((result:any)=>{
                 calEvents.push({
@@ -211,8 +213,9 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
                     color: result.RoomName.ColorCalculated,
                     roomId: result.RoomName.ID,
                     roomTitle: result.RoomName.Title,
-                    className: roomId ? (roomId == parseInt(result.RoomName.ID) ? 'roomEvent roomID-' + result.RoomName.ID : 'roomEventHidden roomEvent roomID-' + result.RoomName.ID) : 'roomEvent roomID-' + result.RoomName.ID
-                    // className : 'roomEvent roomID-' + result.RoomName.ID
+                    className: roomId ? (roomId == parseInt(result.RoomName.ID) ? 'roomEvent roomID-' + result.RoomName.ID : 'roomEventHidden roomEvent roomID-' + result.RoomName.ID) : 'roomEvent roomID-' + result.RoomName.ID,
+                    status: result.Status,
+                    period: result.Periods.Title
                 });
             });
             //console.log("calEvents", calEvents);
