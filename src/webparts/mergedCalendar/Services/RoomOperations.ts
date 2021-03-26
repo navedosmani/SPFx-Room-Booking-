@@ -70,18 +70,48 @@ export const getRoomsCalendarName = (calendarSettingsList: any) : string =>{
     return 'Events';
 };
 
-export const addEvent = async (context: WebPartContext, roomsCalListName: string, eventDetails: any, roomInfo: any) => {
-    console.log("eventDetails", eventDetails);
-    console.log("roomInfo", roomInfo);
+export const getChosenDate = (startPeriodField: any, endPeriodField: any, formFieldParam: any) =>{
+    const startPeriod = new Date(startPeriodField);
+    const endPeriod = new Date(endPeriodField);
+    const currDate = new Date(formFieldParam);
 
+    const startPeriodHr = startPeriod.getHours();
+    const startPeriodMin = startPeriod.getMinutes();
+    const endPeriodHr = endPeriod.getHours();
+    const endPeriodMin = endPeriod.getMinutes();
+
+    const dateDay = currDate.getDate();
+    const dateMonth = currDate.getMonth();
+    const dateYear = currDate.getFullYear();
+
+    let chosenStartDate = new Date();
+    chosenStartDate.setDate(dateDay);
+    chosenStartDate.setMonth(dateMonth);
+    chosenStartDate.setFullYear(dateYear);
+    chosenStartDate.setHours(startPeriodHr);
+    chosenStartDate.setMinutes(startPeriodMin);
+
+    let chosenEndDate = new Date();
+    chosenEndDate.setDate(dateDay);
+    chosenEndDate.setMonth(dateMonth);
+    chosenEndDate.setFullYear(dateYear);
+    chosenEndDate.setHours(endPeriodHr);
+    chosenEndDate.setMinutes(endPeriodMin);
+
+    return[chosenStartDate, chosenEndDate];
+  };
+
+export const addEvent = async (context: WebPartContext, roomsCalListName: string, eventDetails: any, roomInfo: any) => {
+    console.log("roomInfo", roomInfo);
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${roomsCalListName}')/items`;
     const body: string = JSON.stringify({
         Title: eventDetails.titleField,
         Description: eventDetails.descpField,
-        EventDate: eventDetails.dateField,
-        EndDate: eventDetails.dateField,
+        EventDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[0],
+        EndDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[1],
         PeriodsId: eventDetails.periodField.key,
-        RoomNameId: roomInfo.Id
+        RoomNameId: roomInfo.Id,
+        Location: roomInfo.Title
     });
     const spOptions: ISPHttpClientOptions = {
         headers:{
