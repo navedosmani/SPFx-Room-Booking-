@@ -79,3 +79,15 @@
     display: inline-block;
     border-radius: 3px;
 }
+
+.roomLegendItem{
+    a{
+        &:hover{
+            text-decoration: none!important;
+        }
+    }
+}
+
+.bookingForm{
+    padding-bottom: 30px;
+}
