@@ -74,12 +74,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     getLocationGroup(props.context, roomsList).then((results)=>{
       setLocationGroup(results);
     });
-    getPeriods(props.context, periodsList).then((results)=>{
-      setPeriods(results);
-    });
-    getGuidelines(props.context, guidelinesList).then((results)=>{
-      setGuidelines(results);
-    });
+    // getPeriods(props.context, periodsList).then((results)=>{
+    //   setPeriods(results);
+    // });
+    // getGuidelines(props.context, guidelinesList).then((results)=>{
+    //   setGuidelines(results);
+    // });
   }, []);
 
   const chkHandleChange = (newCalSettings:{})=>{    
@@ -215,6 +215,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     openPanelDetails();
   };
   const onBookClick = (bookingInfoParam: any) =>{
+    getPeriods(props.context, periodsList, bookingInfoParam.roomInfo.Id, formField.dateField).then((results)=>{
+      setPeriods(results);
+    });
+    getGuidelines(props.context, guidelinesList).then((results)=>{
+      setGuidelines(results);
+    });
+
     resetFields();
     setRoomInfo(bookingInfoParam.roomInfo);
     dismissPanelDetails();
