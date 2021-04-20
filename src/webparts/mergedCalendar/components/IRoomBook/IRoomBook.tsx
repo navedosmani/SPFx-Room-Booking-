@@ -81,7 +81,7 @@ export default function IRoomBook (props:IRoomBookProps) {
     ];
 
     return(
-        <div>
+        <div className={styles.bookingForm}>
             <h3>{props.roomInfo.Title}</h3>
             <Stack tokens={stackTokens}>
                 <Stack>
