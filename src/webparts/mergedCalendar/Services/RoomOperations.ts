@@ -1,5 +1,6 @@
 import {WebPartContext} from "@microsoft/sp-webpart-base";
 import {SPHttpClient, ISPHttpClientOptions} from "@microsoft/sp-http";
+import * as moment from 'moment';
 
 export const getRooms = async (context: WebPartContext, roomsList: string) =>{
     console.log("Get Rooms Function");
@@ -45,10 +46,20 @@ const adjustPeriods = (arr: []): {}[] =>{
 
     return arrAdj;
 };
-export const getPeriods = async (context: WebPartContext, periodsList: string) =>{
+export const getPeriods = async (context: WebPartContext, periodsList: string, roomId: any, bookingDate: any) =>{
     console.log("Get Periods Function");
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${periodsList}')/items?$orderBy=SortOrder asc`;
     const results = await context.spHttpClient.get(restUrl, SPHttpClient.configurations.v1).then(response => response.json());
+
+    console.log('roomID', roomId);
+    console.log('bookingDate', bookingDate);
+    const restUrlEvents = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('Events')/items?$filter=RoomNameId eq '${roomId}'`;
+    const resultsEvents = await context.spHttpClient.get(restUrlEvents, SPHttpClient.configurations.v1).then(response => response.json());
+    console.log("resultsEvents", resultsEvents);
+    let bookingDateDay = moment(bookingDate, 'MM-DD-YYY');
+    for (let resultEvent of resultsEvents){
+
+    }
 
     return adjustPeriods(results.value);
 };
@@ -102,7 +113,7 @@ export const getChosenDate = (startPeriodField: any, endPeriodField: any, formFi
   };
 
 export const addEvent = async (context: WebPartContext, roomsCalListName: string, eventDetails: any, roomInfo: any) => {
-    console.log("roomInfo", roomInfo);
+    // console.log("roomInfo", roomInfo);
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${roomsCalListName}')/items`;
     const body: string = JSON.stringify({
         Title: eventDetails.titleField,
