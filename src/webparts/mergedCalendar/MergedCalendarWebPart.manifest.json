@@ -1,6 +1,6 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx/client-side-web-part-manifest.schema.json",
-  "id": "84fd9f85-a309-4b1e-98fd-db8ae45e1323",
+  "id": "00f6c2d2-68b5-4e6e-ba23-03566cedad3d",
   "alias": "SPFxRoomBookingWebPart",
   "componentType": "WebPart",
 
@@ -17,7 +17,7 @@
   "preconfiguredEntries": [{
     "groupId": "5c03119e-3074-46fd-976b-c60198311f70", // Other
     "group": { "default": "Other" },
-    "title": { "default": "Peel Room Booking System" },
+    "title": { "default": "Peel Room Booking System Testing" },
     "description": { "default": "SPFx RoomBooking description" },
     "officeFabricIconFontName": "Page",
     "properties": {

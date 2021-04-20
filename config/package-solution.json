@@ -1,8 +1,8 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "spfx-room-booking",
-    "id": "84fd9f85-a309-4b1e-98fd-db8ae45e1323",
+    "name": "spfx-room-booking-testing",
+    "id": "00f6c2d2-68b5-4e6e-ba23-03566cedad3d",
     "version": "1.0.0.0",
     "includeClientSideAssets": true,
     "isDomainIsolated": false,
@@ -54,6 +54,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/spfx-room-booking.sppkg"
+    "zippedPackage": "solution/spfx-room-booking-testing.sppkg"
   }
 }

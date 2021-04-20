@@ -74,12 +74,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     getLocationGroup(props.context, roomsList).then((results)=>{
       setLocationGroup(results);
     });
-    getPeriods(props.context, periodsList).then((results)=>{
-      setPeriods(results);
-    });
-    getGuidelines(props.context, guidelinesList).then((results)=>{
-      setGuidelines(results);
-    });
+    // getPeriods(props.context, periodsList).then((results)=>{
+    //   setPeriods(results);
+    // });
+    // getGuidelines(props.context, guidelinesList).then((results)=>{
+    //   setGuidelines(results);
+    // });
   }, []);
 
   const chkHandleChange = (newCalSettings:{})=>{    
@@ -215,6 +215,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     openPanelDetails();
   };
   const onBookClick = (bookingInfoParam: any) =>{
+    getPeriods(props.context, periodsList, bookingInfoParam.roomInfo.Id, formField.dateField).then((results)=>{
+      setPeriods(results);
+    });
+    getGuidelines(props.context, guidelinesList).then((results)=>{
+      setGuidelines(results);
+    });
+
     resetFields();
     setRoomInfo(bookingInfoParam.roomInfo);
     dismissPanelDetails();
@@ -232,7 +239,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           setEventSources(results[1]);
         });
       });
-    })
+    });
   };
 
   return(
@@ -278,7 +285,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           context={props.context}
           listGUID = {listGUID}/>
 
-        <ILegend calSettings={calSettings} />
+        <ILegend 
+          calSettings={calSettings} 
+          rooms={filteredRooms}
+        />
       </div>
 
       <IPanel
@@ -338,7 +348,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           roomInfo={roomInfo}
         />
         
-        <div className={styles.panelBtns}>
+        <div>
           <PrimaryButton text="Book" onClick={getRoomFormFields}/>
           <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
         </div>

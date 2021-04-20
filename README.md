@@ -51,4 +51,12 @@ gulp bundle --ship
 gulp package-solution --ship
 
 
+# Room Booking version 1
+spfx-room-booking
+84fd9f85-a309-4b1e-98fd-db8ae45e1323
+
+# Room Booking version testing
+spfx-room-booking-testing
+00f6c2d2-68b5-4e6e-ba23-03566cedad3d
+
 

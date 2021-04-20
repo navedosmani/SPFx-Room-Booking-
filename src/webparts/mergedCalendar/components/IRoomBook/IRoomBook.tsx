@@ -81,7 +81,7 @@ export default function IRoomBook (props:IRoomBookProps) {
     ];
 
     return(
-        <div>
+        <div className={styles.bookingForm}>
             <h3>{props.roomInfo.Title}</h3>
             <Stack tokens={stackTokens}>
                 <Stack>
@@ -98,15 +98,6 @@ export default function IRoomBook (props:IRoomBookProps) {
                         value={props.formField.descpField} 
                         onChange={props.onChangeFormField('descpField')}
                     />   
-                    <Dropdown 
-                        placeholder="Select a period" 
-                        label="Period" 
-                        required
-                        selectedKey={props.formField.periodField ? props.formField.periodField.key : undefined}
-                        options={props.periodOptions} 
-                        onChange={props.onChangeFormField('periodField')} 
-                        errorMessage={props.errorMsgField.periodField} 
-                    />
                     <DatePicker
                         isRequired={true}
                         firstDayOfWeek={firstDayOfWeek}
@@ -115,6 +106,15 @@ export default function IRoomBook (props:IRoomBookProps) {
                         ariaLabel="Select a date"
                         onSelectDate={props.onChangeFormField('dateField')}
                         value={props.formField.dateField}
+                    />
+                    <Dropdown 
+                        placeholder="Select a period" 
+                        label="Period" 
+                        required
+                        selectedKey={props.formField.periodField ? props.formField.periodField.key : undefined}
+                        options={props.periodOptions} 
+                        onChange={props.onChangeFormField('periodField')} 
+                        errorMessage={props.errorMsgField.periodField} 
                     />
                     <TextField 
                         label='Start Time' 

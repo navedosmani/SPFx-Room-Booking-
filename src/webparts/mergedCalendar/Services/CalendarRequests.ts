@@ -195,7 +195,7 @@ export const getRoomsCal = async (context: WebPartContext, calSettings:{CalType:
     if (_data.ok){
         const calResult = await _data.json();
 
-        console.log("calResult", calResult);
+        // console.log("calResult", calResult);
 
         if(calResult){
             calResult.d.results.map((result:any)=>{
