@@ -5,7 +5,6 @@ import roomStyles from '../Room.module.scss';
 import { ILegendProps } from './ILegendProps';
 
 export default function ILegend(props:ILegendProps){
-    console.log("props.rooms", props.rooms);
     return(
         <div className={styles.calendarLegend}>
             <ul>
