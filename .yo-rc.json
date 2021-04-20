@@ -3,8 +3,8 @@
     "isCreatingSolution": true,
     "environment": "spo",
     "version": "1.11.0",
-    "libraryName": "spfx-room-booking",
-    "libraryId": "84fd9f85-a309-4b1e-98fd-db8ae45e1323",
+    "libraryName": "spfx-room-booking-testing",
+    "libraryId": "00f6c2d2-68b5-4e6e-ba23-03566cedad3d",
     "packageManager": "npm",
     "isDomainIsolated": false,
     "componentType": "webpart"
