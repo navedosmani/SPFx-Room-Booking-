@@ -232,7 +232,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           setEventSources(results[1]);
         });
       });
-    })
+    });
   };
 
   return(
@@ -278,7 +278,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           context={props.context}
           listGUID = {listGUID}/>
 
-        <ILegend calSettings={calSettings} />
+        <ILegend 
+          calSettings={calSettings} 
+          rooms={filteredRooms}
+        />
       </div>
 
       <IPanel
@@ -338,7 +341,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           roomInfo={roomInfo}
         />
         
-        <div className={styles.panelBtns}>
+        <div>
           <PrimaryButton text="Book" onClick={getRoomFormFields}/>
           <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
         </div>
