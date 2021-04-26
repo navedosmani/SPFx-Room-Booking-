@@ -39,7 +39,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
   const [rooms, setRooms] = React.useState([]);
   const [roomId, setRoomId] = React.useState(null);
-  const [roomInfo, setRoomInfo] = React.useState({});
+  const [roomInfo, setRoomInfo] = React.useState(null);
   const [isOpenDetails, { setTrue: openPanelDetails, setFalse: dismissPanelDetails }] = useBoolean(false);
   const [isOpenBook, { setTrue: openPanelBook, setFalse: dismissPanelBook }] = useBoolean(false);
   const [filteredRooms, setFilteredRooms] = React.useState(rooms);
@@ -149,6 +149,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         ...formField,
         [formFieldParam]: (newValue === undefined && typeof event === "object") ? event : (typeof newValue === "boolean" ? !!newValue : newValue || ''),
       });
+
+      if(formFieldParam === 'dateField'){
+        getPeriods(props.context, periodsList, roomInfo.Id, event).then((results)=>{
+          setPeriods(results);
+        });
+      }
+
     };
   };
   

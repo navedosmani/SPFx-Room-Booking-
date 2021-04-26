@@ -31,7 +31,7 @@ export const getLocationGroup = async(context: WebPartContext, roomsList: string
     return adjustLocation(results.value[0].Choices);
 };
 
-const adjustPeriods = (arr: []): {}[] =>{
+const adjustPeriods = (arr: [], disabledPeriods: any): {}[] =>{
     let arrAdj :{}[] = [];
 
     arr.map((item: any)=>{
@@ -40,7 +40,8 @@ const adjustPeriods = (arr: []): {}[] =>{
             text: item.Title,
             start: item.StartTime,
             end: item.EndTime,
-            order: item.SortOrder
+            order: item.SortOrder,
+            disabled: disabledPeriods.includes(item.Id) ? true : false
         });
     });
 
@@ -51,18 +52,46 @@ export const getPeriods = async (context: WebPartContext, periodsList: string, r
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${periodsList}')/items?$orderBy=SortOrder asc`;
     const results = await context.spHttpClient.get(restUrl, SPHttpClient.configurations.v1).then(response => response.json());
 
-    console.log('roomID', roomId);
-    console.log('bookingDate', bookingDate);
     const restUrlEvents = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('Events')/items?$filter=RoomNameId eq '${roomId}'`;
     const resultsEvents = await context.spHttpClient.get(restUrlEvents, SPHttpClient.configurations.v1).then(response => response.json());
-    console.log("resultsEvents", resultsEvents);
-    let bookingDateDay = moment(bookingDate, 'MM-DD-YYY');
-    for (let resultEvent of resultsEvents){
-
+    
+    let bookedPeriods : any = [];
+    let bookingDateDay = moment(bookingDate).format('MM-DD-YYYY');
+    for (let resultEvent of resultsEvents.value){
+        if(moment(resultEvent.EventDate).format('MM-DD-YYYY') === bookingDateDay){
+            bookedPeriods.push(resultEvent.PeriodsId);
+        }
     }
 
-    return adjustPeriods(results.value);
+    return adjustPeriods(results.value, bookedPeriods);
 };
+
+// export const getFreePeriods  =  async (context: WebPartContext, periods: any, selectedDate: any, roomId: any) =>{
+//     const restUrlEvents = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('Events')/items?$filter=RoomNameId eq '${roomId}'`;
+//     const resultsEvents = await context.spHttpClient.get(restUrlEvents, SPHttpClient.configurations.v1).then(response => response.json());
+    
+//     let bookedPeriods : any = [];
+//     let bookingDateDay = moment(selectedDate).format('MM-DD-YYYY');
+//     for (let resultEvent of resultsEvents.value){
+//         if(moment(resultEvent.EventDate).format('MM-DD-YYYY') === bookingDateDay){
+//             bookedPeriods.push(resultEvent.PeriodsId);
+//         }
+//     }
+
+//     let updatedPeriods : any = [];
+//     periods.map((period: any)=>{
+//         updatedPeriods.push({
+//             key: period.key,
+//             text: period.text,
+//             start: period.start,
+//             end: period.end,
+//             order: period.order,
+//             disabled: bookedPeriods.includes(period.key) ? true : false
+//         });
+//     });
+
+//     return updatedPeriods;
+// };
 
 export const getGuidelines = async (context: WebPartContext, guidelinesList: string) =>{
     console.log("Get Guidelines Function");
