@@ -36,3 +36,9 @@
 .roomEventHidden{
     display: none;
 }
+.ms-Dialog-header div[class^="topButton-"]{
+    z-index: 10;
+}
+.ms-Dialog-header{
+    background: #ddd;
+}

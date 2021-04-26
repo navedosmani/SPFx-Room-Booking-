@@ -5,24 +5,25 @@ import {IDialogProps} from './IDialogProps';
 import IEventDetails from  '../IEventDetails/IEventDetails';
 
 export default function IDialog(props:IDialogProps){
-    const modelProps = {
-        isBlocking: false,
-        //styles: { main: { minWidth: '30%' } },
-      };
-      const dialogContentProps = {
-        type: DialogType.close,
-        title: 'Event Details',
-        subText: '',
-      };
   
+  const modelProps = {
+    isBlocking: false,
+    className: 'modalColor'+props.eventDetails.Color,
+  };
+  const dialogContentProps = {
+    type: DialogType.close,
+    title: props.eventDetails.Title,
+    subText: '',
+  };
+
       return (
         <>
-          <Dialog
+          <Dialog 
             hidden={props.hideDialog}
             onDismiss={props.toggleHideDialog}
             dialogContentProps={dialogContentProps}
             modalProps={modelProps}
-            minWidth="35%" >
+            minWidth="25%">
 
             <IEventDetails 
                 Title ={props.eventDetails.Title} 

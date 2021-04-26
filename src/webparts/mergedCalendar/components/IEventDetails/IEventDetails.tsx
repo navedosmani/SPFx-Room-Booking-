@@ -2,19 +2,26 @@ import * as React from 'react';
 import styles from '../MergedCalendar.module.scss';
 import roomStyles from '../Room.module.scss';
 import {IEventDetailsProps} from './IEventDetailsProps';
-
-import {DefaultButton} from '@fluentui/react';
+// import {DefaultButton} from '@fluentui/react';
 
 export default function IEventDetails (props: IEventDetailsProps){
 
     return(
         <div className={styles.eventDetails}>
 
-            <h3><span className={roomStyles.roomBullet} style={{backgroundColor: props.Color}}></span> {props.Room}</h3>
-            <div className={styles.evFld}>
+            {/* <h1 style={{backgroundColor: props.Color}} className={props.Color ? roomStyles.dialogHDR : roomStyles.dialogHDRNoColor}>{props.Title}</h1> */}
+
+            {props.Room &&
+                <h3>
+                    <span className={roomStyles.roomBullet} style={{backgroundColor: props.Color}}></span>&nbsp;
+                    {props.Room}
+                </h3>
+            }
+
+            {/* <div className={styles.evFld}>
                 <label className={styles.evLbl}>Title</label>
                 <div className={styles.evIp}>{props.Title}</div>
-            </div>
+            </div> */}
             <div className={styles.evFld}>
                 <label className={styles.evLbl}>Start time</label>
                 <div className={styles.evIp}>
