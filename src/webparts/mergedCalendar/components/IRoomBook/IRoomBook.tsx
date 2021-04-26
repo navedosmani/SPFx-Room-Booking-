@@ -2,7 +2,6 @@ import * as React from 'react';
 import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox, Text} from '@fluentui/react';
 import styles from '../Room.module.scss';
 import { IRoomBookProps } from './IRoomBookProps';
-import { Label } from 'office-ui-fabric-react';
 import {getChosenDate} from '../../Services/RoomOperations';
 import * as moment from 'moment';
 
