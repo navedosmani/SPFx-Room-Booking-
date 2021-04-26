@@ -1,5 +1,3 @@
-import { AllDayMountArg } from "@fullcalendar/common";
-
 export interface IRoomBookProps{
     formField: any;
     errorMsgField: any;
