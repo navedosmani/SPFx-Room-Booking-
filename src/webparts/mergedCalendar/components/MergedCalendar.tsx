@@ -133,11 +133,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     descpField: "",
     periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
     dateField : new Date(),
-    
     startHrField : {key:'12 AM', text: '12 AM'},
     startMinField : {key:'00', text: '00'},
     endHrField : {key:'12 AM', text: '12 AM'},
     endMinField : {key:'00', text: '00'},
+    addToCalField: false
   });
   //error handeling
   const [errorMsgField , setErrorMsgField] = React.useState({
@@ -149,12 +149,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     titleField: "",
     descpField: "",
     periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
-    dateField : new Date(),
-    
+    dateField : new Date(),    
     startHrField : {key:'12 AM', text: '12 AM'},
     startMinField : {key:'00', text: '00'},
     endHrField : {key:'12 AM', text: '12 AM'},
     endMinField : {key:'00', text: '00'},
+    addToCalField: false
     });
     setErrorMsgField({
       titleField: "",
@@ -173,7 +173,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       });
 
       setErrorMsgField({titleField: "", periodField: ""});
-      
+
       if(formFieldParam === 'dateField'){
         getPeriods(props.context, periodsList, roomInfo.Id, event).then((results)=>{
           setPeriods(results);
@@ -245,7 +245,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         setPeriods(results);
         
         let seletedPeriod = results.filter(item => item.key === formField.periodField.key);
-        if (!seletedPeriod[0].disabled){
+        if (!seletedPeriod[0].disabled){          
           addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
             dismissPanelBook();
             _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
@@ -254,7 +254,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
               setEventSources(results[1]);
             });
           });
-        }else{
+        }else{ //Period already booked
           setErrorMsgField({titleField: "", periodField: "Looks like the period is already booked! Please choose another one."});
           setFormField({
             ...formField,

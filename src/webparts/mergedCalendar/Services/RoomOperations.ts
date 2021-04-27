@@ -1,5 +1,6 @@
 import {WebPartContext} from "@microsoft/sp-webpart-base";
-import {SPHttpClient, ISPHttpClientOptions} from "@microsoft/sp-http";
+import {SPHttpClient, ISPHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
+import {formatStartDate, formatEndDate} from '../Services/EventFormat';
 import * as moment from 'moment';
 
 export const getRooms = async (context: WebPartContext, roomsList: string) =>{
@@ -139,10 +140,42 @@ export const getChosenDate = (startPeriodField: any, endPeriodField: any, formFi
     chosenEndDate.setMinutes(endPeriodMin);
 
     return[chosenStartDate, chosenEndDate];
-  };
+};
+
+export const addToMyGraphCal = async (context: WebPartContext, eventDetails: any, roomInfo: any) =>{
+    const event = {
+        "subject": eventDetails.titleField,
+        "body": {
+            "contentType": "HTML",
+            "content": eventDetails.descpField
+        },
+        "start": {
+            "dateTime": getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[0],
+            "timeZone": "Eastern Standard Time"
+        },
+        "end": {
+            "dateTime": getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[1],
+            "timeZone": "Eastern Standard Time"
+        },
+        "location": {
+            "displayName": roomInfo.LocationGroup +' - '+ roomInfo.Title + ', ' + eventDetails.periodField.text
+        }
+    };
+
+    context.msGraphClientFactory
+        .getClient()
+        .then((client :MSGraphClient)=>{
+            client
+                .api("/me/events")
+                .post(event, (err, res) => {
+                    console.log(res);
+                });
+        });
+};
 
 export const addEvent = async (context: WebPartContext, roomsCalListName: string, eventDetails: any, roomInfo: any) => {
-    // console.log("roomInfo", roomInfo);
+    //console.log("roomInfo", roomInfo);
+    //console.log("eventDetails", eventDetails);
     const restUrl = context.pageContext.web.absoluteUrl + `/_api/web/lists/getByTitle('${roomsCalListName}')/items`;
     const body: string = JSON.stringify({
         Title: eventDetails.titleField,
@@ -164,6 +197,12 @@ export const addEvent = async (context: WebPartContext, roomsCalListName: string
     const _data = await context.spHttpClient.post(restUrl, SPHttpClient.configurations.v1, spOptions);
     if(_data.ok){
         console.log('New Event is added!');
+    }
+
+    if(eventDetails.addToCalField){
+        addToMyGraphCal(context, eventDetails, roomInfo).then(()=>{
+            console.log('Room added to My Calendar!');
+        });
     }
 };
 

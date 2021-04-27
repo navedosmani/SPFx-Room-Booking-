@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox, Text} from '@fluentui/react';
+import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox, Text, Toggle} from '@fluentui/react';
 import styles from '../Room.module.scss';
 import { IRoomBookProps } from './IRoomBookProps';
 import {getChosenDate} from '../../Services/RoomOperations';
@@ -126,6 +126,13 @@ export default function IRoomBook (props:IRoomBookProps) {
                         readOnly
                         disabled
                         value={moment(getChosenDate(props.formField.periodField.start, props.formField.periodField.end, props.formField.dateField)[1]).format('hh:mm A')}
+                    />
+                    <Toggle 
+                        label="Add this event to my Calendar" 
+                        onText="Yes" 
+                        offText="No" 
+                        checked={props.formField.addToCalField}
+                        onChange={props.onChangeFormField('addToCalField')}
                     />
                     {/*<Label>Start Time</Label>
                      <Stack horizontal tokens={stackTokens}>
