@@ -128,7 +128,7 @@ export default function IRoomBook (props:IRoomBookProps) {
                         value={moment(getChosenDate(props.formField.periodField.start, props.formField.periodField.end, props.formField.dateField)[1]).format('hh:mm A')}
                     />
                     <Toggle 
-                        label="Add this event to my Calendar" 
+                        label="Add this event's booking to my Calendar" 
                         onText="Yes" 
                         offText="No" 
                         checked={props.formField.addToCalField}
