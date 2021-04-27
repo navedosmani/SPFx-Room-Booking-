@@ -55,7 +55,7 @@ export default function ICalendar(props:ICalendarProps){
             weekends={props.showWeekends}
             eventClick={props.handleDateClick}
             eventSources = {props.eventSources}
-            
+            contentHeight='auto'
             eventContent = {(eventInfo)=>{
               // console.log("eventInfo", eventInfo);
               return (
