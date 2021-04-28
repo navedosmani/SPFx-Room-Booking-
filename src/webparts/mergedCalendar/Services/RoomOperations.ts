@@ -38,10 +38,10 @@ const adjustPeriods = (arr: [], disabledPeriods: any): {}[] =>{
     arr.map((item: any)=>{
         arrAdj.push({
             key: item.Id,
-            text: item.Title,
+            text: item.Title + '  (' + moment(item.StartTime).format('hh:mm A') + ' - ' + moment(item.EndTime).format('hh:mm A') + ')',
             start: item.StartTime,
             end: item.EndTime,
-            order: item.SortOrder,
+            //order: item.SortOrder,
             disabled: disabledPeriods.includes(item.Id) ? true : false
         });
     });
