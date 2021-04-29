@@ -91,19 +91,33 @@
 
 .bookingForm{
     padding-bottom: 30px;
+    .disabledCtrl{
+        label, input, textarea, div span:first-child{
+            color: #666;
+        }
+        input, textarea{
+            background: transparent;
+        }
+        div span:first-child{
+            background: transparent;
+            border: 1px solid #eee;
+        }
+    }
 }
 
-.dialogHDR{
-    margin: -56px -24px 0 -24px;
-    padding: 8px 20px 10px;
-    font-size: 24px;
-    font-weight: 600;
-    color: #fff;
-}
-.dialogHDRNoColor{
-    margin: -56px -24px 0 -24px;
-    padding: 8px 20px 10px;
-    font-size: 24px;
-    font-weight: 600;
-    color: #333;
-}
+
+// Not used so far
+// .dialogHDR{
+//     margin: -56px -24px 0 -24px;
+//     padding: 8px 20px 10px;
+//     font-size: 24px;
+//     font-weight: 600;
+//     color: #fff;
+// }
+// .dialogHDRNoColor{
+//     margin: -56px -24px 0 -24px;
+//     padding: 8px 20px 10px;
+//     font-size: 24px;
+//     font-weight: 600;
+//     color: #333;
+// }
