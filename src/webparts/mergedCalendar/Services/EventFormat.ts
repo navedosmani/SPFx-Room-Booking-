@@ -32,6 +32,7 @@ export const formatEvDetails = (ev:any) : {} =>{
         evDetails : {} = {};
 
     evDetails = {
+        EventId: event._def.publicId,
         Title: event.title,
         Start: event.startStr ? formateDate(event.startStr) : "",
         End: event.endStr ? formateDate(event.endStr) : "",
@@ -42,8 +43,10 @@ export const formatEvDetails = (ev:any) : {} =>{
         RecurrData: event._def.extendedProps.recurrData,
         RecurringDef: event._def.extendedProps.recurringDef,
         Room: event._def.extendedProps.roomTitle,
+        RoomId: event._def.extendedProps.roomId,
         Status: event._def.extendedProps.status,
         Period: event._def.extendedProps.period,
+        PeriodId: event._def.extendedProps.periodId,
         Color: event.backgroundColor
     };
 
