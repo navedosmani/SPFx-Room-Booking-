@@ -1,9 +1,12 @@
 import * as React from 'react';
-import {Stack, TextField, Dropdown, IDropdownOption, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, ComboBox, IComboBox, Text, Toggle} from '@fluentui/react';
-import styles from '../Room.module.scss';
+import {Stack, TextField, Dropdown, DatePicker, IDatePickerStrings, DayOfWeek, IComboBoxOption, Toggle, PrimaryButton, DefaultButton, Dialog, DialogType, DialogFooter} from '@fluentui/react';
+import styles from '../MergedCalendar.module.scss';
+import roomStyles from '../Room.module.scss';
 import { IRoomBookProps } from './IRoomBookProps';
 import {getChosenDate} from '../../Services/RoomOperations';
 import * as moment from 'moment';
+import { useBoolean } from '@fluentui/react-hooks';
+import {isUserManage} from '../../Services/RoomOperations';
 
 export default function IRoomBook (props:IRoomBookProps) {
 
@@ -79,9 +82,23 @@ export default function IRoomBook (props:IRoomBookProps) {
         { key: '55', text: '55' },
     ];
 
+    const disabledControl = props.bookFormMode === 'View' ? true: false;
+    
+    const modelProps = {
+        isBlocking: false,
+        styles: { main: { maxWidth: 450 } },
+    };
+    const dialogContentProps = {
+        type: DialogType.largeHeader,
+        title: 'Delete Booking',
+        subText: 'Are you sure you want to delete this event booking?',
+    };
+    const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+
     return(
-        <div className={styles.bookingForm}>
-            <h3>{props.roomInfo.Title}</h3>
+        <React.Fragment>
+        <div className={roomStyles.bookingForm}>
+            <h3>{props.roomInfo.Title ? props.roomInfo.Title : props.roomInfo}</h3>
             <Stack tokens={stackTokens}>
                 <Stack>
                     <TextField 
@@ -90,12 +107,16 @@ export default function IRoomBook (props:IRoomBookProps) {
                         value={props.formField.titleField} 
                         onChange={props.onChangeFormField('titleField')} 
                         errorMessage={props.errorMsgField.titleField} 
+                        disabled={disabledControl}
+                        className={disabledControl ? roomStyles.disabledCtrl : ''}
                     />  
                     <TextField 
                         label="Description"
                         multiline rows={3}
                         value={props.formField.descpField} 
                         onChange={props.onChangeFormField('descpField')}
+                        disabled={disabledControl}
+                        className={disabledControl ? roomStyles.disabledCtrl : ''}
                     />   
                     <DatePicker
                         isRequired={true}
@@ -105,6 +126,8 @@ export default function IRoomBook (props:IRoomBookProps) {
                         ariaLabel="Select a date"
                         onSelectDate={props.onChangeFormField('dateField')}
                         value={props.formField.dateField}
+                        disabled={disabledControl}
+                        className={disabledControl ? roomStyles.disabledCtrl : ''}
                     />
                     <Dropdown 
                         placeholder="Select a period" 
@@ -114,8 +137,10 @@ export default function IRoomBook (props:IRoomBookProps) {
                         options={props.periodOptions} 
                         onChange={props.onChangeFormField('periodField')} 
                         errorMessage={props.errorMsgField.periodField} 
+                        disabled={disabledControl}
+                        className={disabledControl ? roomStyles.disabledCtrl : ''}
                     />
-                    <TextField 
+                    {/* <TextField 
                         label='Start Time' 
                         readOnly
                         disabled
@@ -126,14 +151,16 @@ export default function IRoomBook (props:IRoomBookProps) {
                         readOnly
                         disabled
                         value={moment(getChosenDate(props.formField.periodField.start, props.formField.periodField.end, props.formField.dateField)[1]).format('hh:mm A')}
-                    />
-                    <Toggle 
-                        label="Add this event's booking to my Calendar" 
-                        onText="Yes" 
-                        offText="No" 
-                        checked={props.formField.addToCalField}
-                        onChange={props.onChangeFormField('addToCalField')}
-                    />
+                    /> */}
+                    {props.bookFormMode !== 'View' &&
+                        <Toggle 
+                            label="Add this event's booking to my Calendar" 
+                            onText="Yes" 
+                            offText="No" 
+                            checked={props.formField.addToCalField}
+                            onChange={props.onChangeFormField('addToCalField')}
+                        />
+                    }
                     {/*<Label>Start Time</Label>
                      <Stack horizontal tokens={stackTokens}>
                         <Stack>
@@ -177,5 +204,33 @@ export default function IRoomBook (props:IRoomBookProps) {
                 </Stack>
             </Stack>
         </div>
+        <div>
+            <Dialog
+                hidden={hideDialog}
+                onDismiss={toggleHideDialog}
+                dialogContentProps={dialogContentProps}
+                modalProps={modelProps}
+            >
+                <DialogFooter>
+                    <PrimaryButton onClick={() => props.onDeleteBookingClick(props.eventId)} text="Yes" />
+                    <DefaultButton onClick={toggleHideDialog} text="No" />
+                </DialogFooter>
+            </Dialog>
+
+            {props.bookFormMode === "New" &&
+                <PrimaryButton text="Book" onClick={props.onNewBookingClick}/>
+            }
+            {props.bookFormMode === "View" && ( props.isCreator || isUserManage ) &&
+                <React.Fragment>
+                    <PrimaryButton text="Edit" onClick={props.onEditBookingClick}/>
+                    <PrimaryButton text="Delete" onClick={toggleHideDialog}  className={styles.marginL10} />
+                </React.Fragment>
+            }
+            {props.bookFormMode === "Edit" &&
+                <PrimaryButton text="Update" onClick={() => props.onUpdateBookingClick(props.eventId)}/>
+            }
+            <DefaultButton text="Cancel" onClick={props.dismissPanelBook} className={styles.marginL10} />
+        </div>
+        </React.Fragment>
     );
 }

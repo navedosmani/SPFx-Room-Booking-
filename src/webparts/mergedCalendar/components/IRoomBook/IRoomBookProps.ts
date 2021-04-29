@@ -4,4 +4,13 @@ export interface IRoomBookProps{
     onChangeFormField: any;
     periodOptions: any;
     roomInfo: any;
+
+    eventId: any;
+    dismissPanelBook: any;
+    bookFormMode: string;
+    onNewBookingClick: any;
+    onEditBookingClick: any;
+    onDeleteBookingClick: any;
+    onUpdateBookingClick: any;
+    isCreator: boolean;
 }
