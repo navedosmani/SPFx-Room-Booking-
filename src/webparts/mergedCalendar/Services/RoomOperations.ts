@@ -1,4 +1,5 @@
 import {WebPartContext} from "@microsoft/sp-webpart-base";
+import { SPPermission } from "@microsoft/sp-page-context";
 import {SPHttpClient, ISPHttpClientOptions, MSGraphClient} from "@microsoft/sp-http";
 import {formatStartDate, formatEndDate} from '../Services/EventFormat';
 import * as moment from 'moment';
@@ -206,3 +207,63 @@ export const addEvent = async (context: WebPartContext, roomsCalListName: string
     }
 };
 
+export const deleteEvent = async (context: WebPartContext, roomsCalListName: string, eventId: any) => {
+    const restUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/getByTitle('${roomsCalListName}')/items(${eventId})`;
+    let spOptions: ISPHttpClientOptions = {
+        headers:{
+            Accept: "application/json;odata=nometadata", 
+            "Content-Type": "application/json;odata=nometadata",
+            "odata-version": "",
+            "IF-MATCH": "*",
+            "X-HTTP-Method": "DELETE"         
+        },
+    };
+
+    const _data = await context.spHttpClient.post(restUrl, SPHttpClient.configurations.v1, spOptions);
+    if (_data.ok){
+        console.log('Event Booking deleted!');
+    }
+};
+
+export const updateEvent = async (context: WebPartContext, roomsCalListName: string, eventId: any, eventDetails: any, roomInfo: any) => {
+    const restUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/getByTitle('${roomsCalListName}')/items(${eventId})`,
+    body: string = JSON.stringify({
+        Title: eventDetails.titleField,
+        Description: eventDetails.descpField,
+        EventDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[0],
+        EndDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[1],
+        PeriodsId: eventDetails.periodField.key,
+        RoomNameId: roomInfo.Id,
+        Location: roomInfo.Title
+    }),
+    spOptions: ISPHttpClientOptions = {
+        headers:{
+            Accept: "application/json;odata=nometadata", 
+            "Content-Type": "application/json;odata=nometadata",
+            "odata-version": "",
+            "IF-MATCH": "*",
+            "X-HTTP-Method": "MERGE",    
+        },
+        body: body
+    },
+    _data = await context.spHttpClient.post(restUrl, SPHttpClient.configurations.v1, spOptions);
+    
+    if (_data.ok){
+        console.log('Event Booking is updated!');
+    }
+};
+
+export const isEventCreator = async (context: WebPartContext, roomsCalListName: string, eventId: any) =>{
+    const currUserId = context.pageContext.legacyPageContext["userId"];
+
+    const restUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/getByTitle('${roomsCalListName}')/items(${eventId})?$select=AuthorId`;
+    const results = await context.spHttpClient.get(restUrl, SPHttpClient.configurations.v1).then(response => response.json());
+
+    return currUserId == results.AuthorId;
+};
+export const isUserManage = (context: WebPartContext) : boolean =>{
+    const userPermissions = context.pageContext.web.permissions,
+        permission = new SPPermission (userPermissions.value);
+    
+    return permission.hasPermission(SPPermission.manageWeb);
+};
