@@ -4,7 +4,7 @@ import roomStyles from './Room.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, PrimaryButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -12,7 +12,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, getChosenDate} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, deleteEvent, updateEvent, isEventCreator} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -40,8 +40,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [rooms, setRooms] = React.useState([]);
   const [roomId, setRoomId] = React.useState(null);
   const [roomInfo, setRoomInfo] = React.useState(null);
+  const [eventId, setEventId] = React.useState(null);
+  const [isCreator, setIsCreator] = React.useState(false);
   const [isOpenDetails, { setTrue: openPanelDetails, setFalse: dismissPanelDetails }] = useBoolean(false);
   const [isOpenBook, { setTrue: openPanelBook, setFalse: dismissPanelBook }] = useBoolean(false);
+  const [bookFormMode, setBookFormMode] = React.useState('New');
   const [filteredRooms, setFilteredRooms] = React.useState(rooms);
   const [roomSelectedKey, setRoomSelectedKey] = React.useState<string | number | undefined>('all');
   const [locationGroup, setLocationGroup] = React.useState([]);
@@ -55,12 +58,17 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const periodsList = props.periodsList ? props.periodsList : "Periods";
   const guidelinesList = props.guidelinesList ? props.guidelinesList : "Guidelines";
   
-  React.useEffect(()=>{
+  const loadLatestCalendars = async (callback?: any) =>{
     _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
       setRoomsCalendar(getRoomsCalendarName(results[0]));
       setCalSettings(results[0]);
       setEventSources(results[1]);
+      callback();
     });
+  };
+
+  React.useEffect(()=>{
+    loadLatestCalendars();
     /*getMySchoolCalGUID(props.context, calSettingsList).then((result)=>{
       setListGUID(result);
     });*/
@@ -86,11 +94,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     return (ev: any, checked: boolean) => { 
       toggleIsDataLoading();
       updateCalSettings(props.context, calSettingsList, newCalSettings, checked).then(()=>{
-        _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results:any)=>{
-          setCalSettings(results[0]);
-          setEventSources(results[1]);
-          toggleIsDataLoading();
-        });
+        loadLatestCalendars(toggleIsDataLoading);
       });
      };
   };  
@@ -98,11 +102,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     return (ev: any, item: IDropdownOption) => { 
       toggleIsDataLoading();
       updateCalSettings(props.context, props.calSettingsList, newCalSettings, newCalSettings.ShowCal, item.key).then(()=>{
-        _calendarOps.displayCalendars(props.context, props.calSettingsList, roomId).then((results: any)=>{
-          setCalSettings(results[0]);
-          setEventSources(results[1]);
-          toggleIsDataLoading();
-        });
+        loadLatestCalendars(toggleIsDataLoading);
       });
      };
   };
@@ -113,12 +113,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       toggleIsDataLoading();
     });
   };
-  const handleDateClick = (arg:any) =>{
-    //console.log("arg", arg);
-    //console.log(formatEvDetails(arg));
-    setEventDetails(formatEvDetails(arg));
-    toggleHideDialog();
-  };
+  // const handleDateClick = (arg:any) =>{
+  //   //console.log("arg", arg);
+  //   //console.log(formatEvDetails(arg));
+  //   setEventDetails(formatEvDetails(arg));
+  //   toggleHideDialog();
+  // };
 
   const handleAddtoCal = ()=>{
     addToMyGraphCal(props.context).then((result)=>{
@@ -131,12 +131,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   const [formField, setFormField] = React.useState({
     titleField: "",
     descpField: "",
-    periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
+    periodField : {key: '', text:'', start:new Date(), end:new Date()},
     dateField : new Date(),
-    startHrField : {key:'12 AM', text: '12 AM'},
-    startMinField : {key:'00', text: '00'},
-    endHrField : {key:'12 AM', text: '12 AM'},
-    endMinField : {key:'00', text: '00'},
+    // startHrField : {key:'12 AM', text: '12 AM'},
+    // startMinField : {key:'00', text: '00'},
+    // endHrField : {key:'12 AM', text: '12 AM'},
+    // endMinField : {key:'00', text: '00'},
     addToCalField: false
   });
   //error handeling
@@ -148,12 +148,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     setFormField({
     titleField: "",
     descpField: "",
-    periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''},
+    periodField : {key: '', text:'', start:new Date(), end:new Date()},
     dateField : new Date(),    
-    startHrField : {key:'12 AM', text: '12 AM'},
-    startMinField : {key:'00', text: '00'},
-    endHrField : {key:'12 AM', text: '12 AM'},
-    endMinField : {key:'00', text: '00'},
+    // startHrField : {key:'12 AM', text: '12 AM'},
+    // startMinField : {key:'00', text: '00'},
+    // endHrField : {key:'12 AM', text: '12 AM'},
+    // endMinField : {key:'00', text: '00'},
     addToCalField: false
     });
     setErrorMsgField({
@@ -181,6 +181,34 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       }
 
     };
+  };
+  const handleDateClick = (arg:any) =>{    
+    getGuidelines(props.context, guidelinesList).then((results)=>{
+      setGuidelines(results);
+    });
+    
+    // console.log("arg", arg);
+    // console.log(formatEvDetails(arg));
+    const evDetails: any = formatEvDetails(arg);
+    isEventCreator(props.context, roomsCalendar, evDetails.EventId).then((v)=>{
+      setIsCreator(v);
+    });
+    
+    getPeriods(props.context, periodsList, evDetails.RoomId, new Date(evDetails.Start)).then((results)=>{
+      setPeriods(results);
+    });
+    setEventId(evDetails.EventId);
+    setFormField({
+      ...formField,
+      titleField: evDetails.Title,
+      descpField: evDetails.Body,
+      periodField : {key: evDetails.PeriodId, text:evDetails.Period, start:new Date(evDetails.Start), end:new Date(evDetails.End)},
+      dateField : new Date(evDetails.Start),    
+      addToCalField: false
+    });
+    setRoomInfo(evDetails.Room);
+    setBookFormMode('View');
+    openPanelBook();
   };
   
   const handleError = (callback:any) =>{
@@ -234,11 +262,12 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     resetFields();
     setRoomInfo(bookingInfoParam.roomInfo);
     dismissPanelDetails();
+    setBookFormMode('New');
     openPanelBook();
   };
 
   //when clicking on the book button in the panel
-  const getRoomFormFields = ()=>{
+  const onNewBookingClickHandler = ()=>{
     handleError(()=>{
       
       getPeriods(props.context, periodsList, roomInfo.Id, formField.dateField).then((results: any)=>{
@@ -248,21 +277,44 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         if (!seletedPeriod[0].disabled){          
           addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
             dismissPanelBook();
-            _calendarOps.displayCalendars(props.context, calSettingsList, roomId).then((results: any)=>{
-              setRoomsCalendar(getRoomsCalendarName(results[0]));
-              setCalSettings(results[0]);
-              setEventSources(results[1]);
-            });
+            loadLatestCalendars();
           });
         }else{ //Period already booked
           setErrorMsgField({titleField: "", periodField: "Looks like the period is already booked! Please choose another one."});
           setFormField({
             ...formField,
-            periodField : {key: '', text:'', start:new Date(), end:new Date(), order:''}
+            periodField : {key: '', text:'', start:new Date(), end:new Date()}
           });
         }
       });
       
+    });
+  };
+
+  const onEditBookingClickHandler = () =>{
+    setBookFormMode('Edit');
+  };
+  const onDeleteBookingClickHandler = (eventIdParam: any) =>{
+    deleteEvent(props.context, roomsCalendar, eventIdParam).then(()=>{
+      loadLatestCalendars(dismissPanelBook);      
+    });
+  };
+  const onUpdateBookingClickHandler = (eventIdParam: any) =>{
+    getPeriods(props.context, periodsList, roomInfo.Id, formField.dateField).then((results: any)=>{
+      setPeriods(results);
+      
+      let seletedPeriod = results.filter(item => item.key === formField.periodField.key);
+      if (!seletedPeriod[0].disabled){          
+        updateEvent(props.context, roomsCalendar, eventIdParam, formField, roomInfo).then(()=>{
+          loadLatestCalendars(dismissPanelBook);
+        });
+      }else{ //Period already booked
+        setErrorMsgField({titleField: "", periodField: "Looks like the period is already booked! Please choose another one."});
+        setFormField({
+          ...formField,
+          periodField : {key: '', text:'', start:new Date(), end:new Date()}
+        });
+      }
     });
   };
 
@@ -370,12 +422,15 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           periodOptions = {periods}
           onChangeFormField={onChangeFormField}
           roomInfo={roomInfo}
+          dismissPanelBook={dismissPanelBook}
+          bookFormMode = {bookFormMode}
+          onNewBookingClick={onNewBookingClickHandler}
+          onEditBookingClick={onEditBookingClickHandler}
+          onDeleteBookingClick={onDeleteBookingClickHandler}
+          onUpdateBookingClick={onUpdateBookingClickHandler}
+          eventId = {eventId}
+          isCreator = {isCreator}
         />
-        
-        <div>
-          <PrimaryButton text="Book" onClick={getRoomFormFields}/>
-          <DefaultButton className={styles.marginL10} onClick={dismissPanelBook} text="Cancel" />
-        </div>
       </Panel>
 
 
