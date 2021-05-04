@@ -48,8 +48,10 @@ const getGraphCals = (context: WebPartContext, calSettings:{CalType:string, Titl
                             calEvents.push({
                                 id: result.id,
                                 title: result.subject,
-                                start: formatStartDate(result.start.dateTime),
-                                end: formatStartDate(result.end.dateTime),
+                                // start: formatStartDate(result.start.dateTime),
+                                // end: formatStartDate(result.end.dateTime),
+                                start: result.start.dateTime,
+                                end: result.end.dateTime,
                                 _location: result.location.displayName,
                                 _body: result.body.content
                             });
