@@ -8,7 +8,7 @@ export default function IDialog(props:IDialogProps){
   
   const modelProps = {
     isBlocking: false,
-    className: 'modalColor'+props.eventDetails.Color,
+    className: props.eventDetails ? 'modalColor'+props.eventDetails.Color :'',
   };
   const dialogContentProps = {
     type: DialogType.close,
@@ -24,7 +24,7 @@ export default function IDialog(props:IDialogProps){
             dialogContentProps={dialogContentProps}
             modalProps={modelProps}
             minWidth="25%">
-
+            
             <IEventDetails 
                 Title ={props.eventDetails.Title} 
                 Start ={props.eventDetails.Start}
@@ -38,6 +38,7 @@ export default function IDialog(props:IDialogProps){
                 Period={props.eventDetails.Period}  
                 Color={props.eventDetails.Color}
             />
+            
             <DialogFooter>
               <DefaultButton onClick={props.toggleHideDialog} text="Close" />
             </DialogFooter>
