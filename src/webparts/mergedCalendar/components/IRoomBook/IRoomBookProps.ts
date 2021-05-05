@@ -4,6 +4,7 @@ export interface IRoomBookProps{
     onChangeFormField: any;
     periodOptions: any;
     roomInfo: any;
+    children: any;
 
     eventId: any;
     dismissPanelBook: any;
