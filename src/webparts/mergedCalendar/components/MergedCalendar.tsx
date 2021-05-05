@@ -24,6 +24,8 @@ import IRoomDetails from './IRoomDetails/IRoomDetails';
 import IRoomDropdown from './IRoomDropdown/IRoomDropdown';
 import IRoomGuidelines from './IRoomGuidelines/IRoomGuidelines';
 
+import toast, { Toaster } from 'react-hot-toast';
+
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
   const _calendarOps = new CalendarOperations();
@@ -64,6 +66,16 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       setCalSettings(results[0]);
       setEventSources(results[1]);
       callback ? callback() : null;
+    });
+  };
+
+  const popToast = (toastMsg: string) =>{
+    toast.success(toastMsg, {
+      duration: 2000,
+      style: {
+        margin: '150px',
+      },
+      className: roomStyles.popNotif            
     });
   };
 
@@ -195,9 +207,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         descpField: evDetails.Body,
         periodField : {key: evDetails.PeriodId, text:evDetails.Period, start:new Date(evDetails.Start), end:new Date(evDetails.End)},
         dateField : new Date(evDetails.Start),    
-        addToCalField: false
+        addToCalField: evDetails.AddToMyCal
       });    
-      
+
+      dismissPanelDetails();
       openPanelBook();
     }
   };
@@ -266,8 +279,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         let seletedPeriod = results.filter(item => item.key === formField.periodField.key);
         if (!seletedPeriod[0].disabled){          
           addEvent(props.context, roomsCalendar, formField, roomInfo).then(()=>{
-            dismissPanelBook();
-            loadLatestCalendars();
+            const callback = () =>{
+              dismissPanelBook();
+              popToast('A New Event Booking is successfully added!');
+            };
+            loadLatestCalendars(callback);
           });
         }else{ //Period already booked
           setErrorMsgField({titleField: "", periodField: "Looks like the period is already booked! Please choose another one."});
@@ -286,7 +302,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   };
   const onDeleteBookingClickHandler = (eventIdParam: any) =>{
     deleteEvent(props.context, roomsCalendar, eventIdParam).then(()=>{
-      loadLatestCalendars(dismissPanelBook);      
+      const callback = () =>{
+        dismissPanelBook();
+        popToast('The Event Booking is successfully deleted!');   
+      };
+      loadLatestCalendars(callback);
     });
   };
   const onUpdateBookingClickHandler = (eventIdParam: any) =>{
@@ -296,7 +316,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       let seletedPeriod = results.filter(item => item.key === formField.periodField.key);
       if (!seletedPeriod[0].disabled){          
         updateEvent(props.context, roomsCalendar, eventIdParam, formField, roomInfo).then(()=>{
-          loadLatestCalendars(dismissPanelBook);
+          const callback = () =>{
+            dismissPanelBook();
+            popToast('Event Booking is successfully updated!');
+          };
+          loadLatestCalendars(callback);
         });
       }else{ //Period already booked
         setErrorMsgField({titleField: "", periodField: "Looks like the period is already booked! Please choose another one."});
@@ -310,6 +334,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
   return(
     <div className={styles.mergedCalendar}>
+
+      <Toaster />
 
       <div style={{float:'left', width: '28%'}}> 
       
@@ -329,7 +355,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       <div style={{float:'left', width: '70%', marginLeft: '2%', position: 'relative'}}>
         {isFiltered &&
           <div className={roomStyles.filterWarning}>
-            <MessageBar
+            <MessageBar 
               messageBarType={MessageBarType.warning}
               isMultiline={false}
               actions={
@@ -379,7 +405,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       <Panel
         isOpen={isOpenDetails}
         onDismiss={dismissPanelDetails}
-        headerText="Room Details"
+        headerText={roomInfo ? roomInfo.Title : 'Room Details'}
+        className={roomStyles.roomBookPanel}
         closeButtonAriaLabel="Close"
         isFooterAtBottom={true}
         isBlocking={false}
@@ -398,13 +425,6 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         closeButtonAriaLabel="Close"
         isFooterAtBottom={true}
         isBlocking={false}>
-          <MessageBar
-            messageBarType={MessageBarType.warning}
-            isMultiline={false}
-            truncated={true}
-            overflowButtonAriaLabel="See more"> 
-            <IRoomGuidelines guidelines = {guidelines} /> 
-          </MessageBar>
         <IRoomBook 
           formField = {formField}
           errorMsgField={errorMsgField} 
@@ -419,7 +439,16 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           onUpdateBookingClick={onUpdateBookingClickHandler}
           eventId = {eventId}
           isCreator = {isCreator}
-        />
+        >
+          <MessageBar 
+            className={roomStyles.guidelinesMsg}
+            messageBarType={MessageBarType.warning}
+            isMultiline={false}
+            truncated={true}
+            overflowButtonAriaLabel="See more"> 
+            <IRoomGuidelines guidelines = {guidelines} /> 
+          </MessageBar>
+        </IRoomBook>
       </Panel>
     </div>
   );
