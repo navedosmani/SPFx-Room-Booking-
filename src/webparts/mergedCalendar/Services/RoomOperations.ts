@@ -185,7 +185,8 @@ export const addEvent = async (context: WebPartContext, roomsCalListName: string
         EndDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[1],
         PeriodsId: eventDetails.periodField.key,
         RoomNameId: roomInfo.Id,
-        Location: roomInfo.Title
+        Location: roomInfo.Title,
+        AddToMyCal: eventDetails.addToCalField
     });
     const spOptions: ISPHttpClientOptions = {
         headers:{
@@ -234,7 +235,8 @@ export const updateEvent = async (context: WebPartContext, roomsCalListName: str
         EndDate: getChosenDate(eventDetails.periodField.start, eventDetails.periodField.end, eventDetails.dateField)[1],
         PeriodsId: eventDetails.periodField.key,
         RoomNameId: roomInfo.Id,
-        Location: roomInfo.Title
+        Location: roomInfo.Title,
+        AddToMyCal: eventDetails.addToCalField
     }),
     spOptions: ISPHttpClientOptions = {
         headers:{
