@@ -13,6 +13,12 @@ A SPFx Merged Calendar React web-part. Aggregates different types of calendars; 
 - Popping notifications on add/edit/delete events using react hot toast library
 - UI enhancements
 
+# Dependencies
+- Calendar Settings list
+- Events list
+- Rooms list
+- Periods list 
+- Guidelines list
 
 # Libraries 
 `npm install rrule`<br/>
