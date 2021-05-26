@@ -364,7 +364,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
               </div>
               }
             >
-              Please note that you are not viewing all rooms now. Click 'Reset Filter' to view all.
+              Please note that you are not viewing all rooms now. Click 'Reset Filter' to view all resources.
             </MessageBar>
           </div>
         }
