@@ -13,6 +13,7 @@ import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests'
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
 import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, deleteEvent, updateEvent, isEventCreator} from '../Services/RoomOperations';
+import {isUserManage} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
 import IPanel from './IPanel/IPanel';
@@ -23,8 +24,11 @@ import IRoomBook from './IRoomBook/IRoomBook';
 import IRoomDetails from './IRoomDetails/IRoomDetails';
 import IRoomDropdown from './IRoomDropdown/IRoomDropdown';
 import IRoomGuidelines from './IRoomGuidelines/IRoomGuidelines';
+import IRoomsManage from './IRoomsManage/IRoomsManage';
 
 import toast, { Toaster } from 'react-hot-toast';
+import { IFrameDialog } from "@pnp/spfx-controls-react/lib/IFrameDialog";
+
 
 export default function MergedCalendar (props:IMergedCalendarProps) {
   
@@ -332,13 +336,37 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
   };
 
+  
+  //Rooms, Periods, Guidelines Management
+  const [iframeUrl, setIframeUrl] = React.useState('');
+  const [iframeShow, setIframeShow] = React.useState(false);
+  const onRoomsManageAdd = (newFormUrl: string) =>{
+    setIframeUrl(newFormUrl);
+    setIframeShow(true);
+  };
+  const onIFrameDismiss = async (event: React.MouseEvent) => {
+    setIframeShow(false);
+    getRooms(props.context, roomsList).then((results)=>{
+      setRooms(results);
+      setFilteredRooms(results);
+    });
+    getGuidelines(props.context, guidelinesList).then((results)=>{
+        setGuidelines(results);
+    });
+  };
+  const onIFrameLoad = async (iframe: any) => {
+    let keepOpen = iframe.contentWindow.location.href.indexOf('Newform.aspx') > 0;
+    if (!keepOpen) {
+      onIFrameDismiss(null);
+    }
+  };
+
   return(
     <div className={styles.mergedCalendar}>
 
       <Toaster />
 
       <div style={{float:'left', width: '28%'}}> 
-      
         <IRoomDropdown 
           onFilterChanged={onFilterChanged}
           roomSelectedKey={roomSelectedKey}
@@ -350,6 +378,25 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           onBookClick={()=> onBookClick}
           onViewDetailsClick={()=>onViewDetailsClick}
         />
+        {isUserManage &&
+          <React.Fragment>
+            <IFrameDialog 
+              url={iframeUrl}
+              width={'570px'}
+              height={'570px'}
+              hidden={!iframeShow}
+              iframeOnLoad={(iframe) => onIFrameLoad(iframe)}
+              onDismiss={(event) => onIFrameDismiss(event)}
+            />
+            <IRoomsManage 
+              context={props.context}
+              roomsList={props.roomsList}
+              periodsList={props.periodsList}
+              guidelinesList={props.guidelinesList}
+              onRoomsManageAdd={onRoomsManageAdd}
+            />
+          </React.Fragment>
+        }
       </div>
 
       <div style={{float:'left', width: '70%', marginLeft: '2%', position: 'relative'}}>
@@ -450,6 +497,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           </MessageBar>
         </IRoomBook>
       </Panel>
+
+        
+
+
     </div>
   );
   
