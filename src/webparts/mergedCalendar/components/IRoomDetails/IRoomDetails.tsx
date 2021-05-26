@@ -25,10 +25,10 @@ export default function IRoomDetails (props:IRoomDetailsProps) {
                     <FontIcon aria-label="Facilities" iconName="Settings" className={roomStyles.roomDetailsIcon} />
                     <label>Facilities: </label><span>{props.roomInfo.Facilities1}</span>
                 </li>
-                <li>
+                {/* <li>
                     <FontIcon aria-label="Period" iconName="PrimaryCalendar" className={roomStyles.roomDetailsIcon} />
                     <label>Period: </label><span>{props.roomInfo.Period_x0020__x0023_}</span>
-                </li>
+                </li> */}
                 <li>
                     <FontIcon aria-label="Locaion Group" iconName="PinnedSolid" className={roomStyles.roomDetailsIcon} />
                     <label>Location Group: </label><span>{props.roomInfo.LocationGroup}</span>
