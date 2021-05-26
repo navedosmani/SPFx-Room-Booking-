@@ -15,10 +15,11 @@
         width: 140px;
         height: 120px;
         border-radius: 0 0 0 3px;
+        margin-top: 10px;
     }
     .roomDetails{
         float: left;
-        width: 50%;
+        width: 55%;
         .roomActions{
             padding: 0 10px;
             margin-top: 15px;       
@@ -131,6 +132,7 @@
         z-index: 99;
         margin: 0;
         padding: 10px;
+        height: 55px;
         div[class^=ms-Panel-header]{
             padding-left: 10px;
             padding-right: 10px;
