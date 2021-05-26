@@ -13,7 +13,7 @@ export default function IRoom (props:IRoomProps) {
     return(
         <div className={styles.roomCard}>
             <h3 style={{borderBottomColor: props.roomInfo.Colour}}><span className={styles.roomBullet} style={{backgroundColor: props.roomInfo.Colour}}></span>{props.roomInfo.Title}</h3> 
-            <img width='150' src={JSON.parse(props.roomInfo.Photo0)['serverRelativeUrl']} />    
+            <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} />    
             <div className={styles.roomDetails}>
                 <div className={styles.roomActions}>
                     <ActionButton className={styles.roomActBtn} iconProps={detailsIcon} onClick={() => props.onViewDetailsClick(props.roomInfo)}>{props.roomInfo.TitleRoomDetails}</ActionButton>

@@ -12,8 +12,8 @@ export default function IRoomDetails (props:IRoomDetailsProps) {
                 className={roomStyles.roomColor}>
             </div>
             <div className={roomStyles.roomImageCntnr}>
-                {props.roomInfo.Photo0 !== undefined &&
-                    <img width='150' src={JSON.parse(props.roomInfo.Photo0)['serverRelativeUrl']} /> 
+                {props.roomInfo.Photo !== undefined &&
+                    <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} /> 
                 }
             </div>
             <ul>
