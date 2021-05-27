@@ -4,7 +4,7 @@ import roomStyles from './Room.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType, Dialog, DialogFooter, DialogType} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, Link, Dialog, DialogFooter, DialogType} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -500,6 +500,13 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           rooms={filteredRooms}
         />
       </div>
+
+      <MessageBar isMultiline={false}>
+        Need help? 
+        <a href="https://pdsb1.sharepoint.com/ltss/classtech/rbs" target="_blank" data-interception="off">
+          Visit our website.
+        </a>
+      </MessageBar>
 
       <IPanel
         dpdOptions={props.dpdOptions} 
