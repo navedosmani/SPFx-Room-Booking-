@@ -409,21 +409,29 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     <div className={styles.mergedCalendar}>
 
       <Toaster />
-
+      
       <div style={{float:'left', width: '28%'}}> 
-        <IRoomDropdown 
-          onFilterChanged={onFilterChanged}
-          roomSelectedKey={roomSelectedKey}
-          locationGroup = {locationGroup}
-        />
-        <IRooms 
-          rooms={filteredRooms} 
-          onCheckAvailClick={() => onCheckAvailClick} 
-          onBookClick={()=> onBookClick}
-          onViewDetailsClick={()=>onViewDetailsClick}
-          onEditClick={() => onEditRoom}
-          onDeleteClick={() => onDeleteRoomClick}
-        />
+      {filteredRooms.length !== 0 ?
+        <React.Fragment>
+          <IRoomDropdown 
+            onFilterChanged={onFilterChanged}
+            roomSelectedKey={roomSelectedKey}
+            locationGroup = {locationGroup}
+          />
+          <IRooms 
+            rooms={filteredRooms} 
+            onCheckAvailClick={() => onCheckAvailClick} 
+            onBookClick={()=> onBookClick}
+            onViewDetailsClick={()=>onViewDetailsClick}
+            onEditClick={() => onEditRoom}
+            onDeleteClick={() => onDeleteRoomClick}
+          />
+          </React.Fragment>
+          :
+          <MessageBar messageBarType={MessageBarType.warning} isMultiline={true} >
+            There are no Rooms created yet. Please use the "Add" and "Edit" options below to manage your Rooms, Periods and Guidelines.
+          </MessageBar>
+        }
         {isUserManage &&
           <React.Fragment>
             <Dialog
