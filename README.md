@@ -45,7 +45,6 @@ spfx-room-booking
 spfx-room-booking-testing
 00f6c2d2-68b5-4e6e-ba23-03566cedad3d
 
-<<<<<<< HEAD
 # Update these files
 C:\myfiles\Github\SPFx-Room-Booking-\.yo-rc.json
 C:\myfiles\Github\SPFx-Room-Booking-\package-lock.json
@@ -55,5 +54,3 @@ C:\myfiles\Github\SPFx-Room-Booking-\config\package-solution.json
 C:\myfiles\Github\SPFx-Room-Booking-\src\webparts\mergedCalendar\MergedCalendarWebPart.manifest.json
 
 
-=======
->>>>>>> fb15ffab73750e85e23e928b01f1c35c9545ec37
