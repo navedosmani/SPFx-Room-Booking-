@@ -1,64 +1,51 @@
-# SPFx-Merged-Calendar
+# SPFx Room Booking system based on the SPFx-Merged-Calendar solution
 A SPFx Merged Calendar React web-part. Aggregates different types of calendars; internal, external, graph, google using Full Calendar plugin.
 
-Started in March 2020 with just plain JS
+# Features
+- Merged Calendar features
+- Adding a calendar of type Room
+- Displaying rooms with title, image, color, and interaction options like: booking, view details, and show/hide room
+- Displaying room details
+- Show/Hide Rooms based on selection
+- Booking a room with detecting conflicts and preventing them
+- Add/Edit/Delete Booking
+- Add to my calendar feature
+- Popping notifications on add/edit/delete events using react hot toast library
+- UI enhancements
 
-Plain JS component was done by October 2020
+# Dependencies
+- Calendar Settings list
+- Events list
+- Rooms list
+- Periods list 
+- Guidelines list
 
-SPFx with React started in November 2020
+# Libraries 
+`npm install rrule`<br/>
+`npm install --save @fullcalendar/react @fullcalendar/rrule @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction`<br/>
+`npm install moment`<br/>
+`npm install @fluentui/react`<br/>
+`npm install @fluentui/react-hooks`<br/>
+`npm install office-ui-fabric-core`<br/>
+`npm install react-hot-toast`
 
-November 10 - Adding SPFx files
+# Testing
+`gulp package-solution`<br/>
+`gulp serve --nobrowser`
 
-Cloning to other machine
+# Deployment
+`gulp bundle --ship`<br/>
+`gulp package-solution --ship`
 
-
-
-Milestones
-------------
-- FullCalendar Integration with react
-- Get calendar information from SP list using Rest API & Display in FullCalendar
-- FullCalendar full day event bug resolution
-- FullCalendar Recurrent events parsing
-- Reading external calendars from Azure API using HttpClient and not SPHttpClient
-- Reading Graph calendars and modifying permissions
-- Implementing the Settings panel using Fluent UI
-- Implementing the Legend component
-- Implementing the dialog and event details components
-
-
-Terminal Commands
--------------------
-npm install rrule
-
-npm install --save @fullcalendar/react @fullcalendar/rrule @fullcalendar/daygrid @fullcalendar/timegrid @fullcalendar/interaction
-
-npm install moment
-
-npm install @fluentui/react
-
-npm install @fluentui/react-hooks
-
-npm install office-ui-fabric-core
-
-
-gulp package-solution
-
-gulp serve --nobrowser
-
-
-gulp bundle --ship
-
-gulp package-solution --ship
-
-
-# Room Booking version 1
+# Room Booking Deployment version 
 spfx-room-booking
 84fd9f85-a309-4b1e-98fd-db8ae45e1323
 
-# Room Booking version testing
+# Room Booking Testing version
 spfx-room-booking-testing
 00f6c2d2-68b5-4e6e-ba23-03566cedad3d
 
+<<<<<<< HEAD
 # Update these files
 C:\myfiles\Github\SPFx-Room-Booking-\.yo-rc.json
 C:\myfiles\Github\SPFx-Room-Booking-\package-lock.json
@@ -68,3 +55,5 @@ C:\myfiles\Github\SPFx-Room-Booking-\config\package-solution.json
 C:\myfiles\Github\SPFx-Room-Booking-\src\webparts\mergedCalendar\MergedCalendarWebPart.manifest.json
 
 
+=======
+>>>>>>> fb15ffab73750e85e23e928b01f1c35c9545ec37
