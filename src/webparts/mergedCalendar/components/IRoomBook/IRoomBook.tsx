@@ -102,7 +102,7 @@ export default function IRoomBook (props:IRoomBookProps) {
     };
     const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
-    console.log("props.formField", props.formField);
+    //console.log("props.formField", props.formField);
     return(
         <React.Fragment>
         <div className={roomStyles.bookingForm}>
