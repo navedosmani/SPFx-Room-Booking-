@@ -4,7 +4,7 @@ import roomStyles from './Room.module.scss';
 import { IMergedCalendarProps } from './IMergedCalendarProps';
 //import { escape } from '@microsoft/sp-lodash-subset';
 
-import {IDropdownOption, DefaultButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType} from '@fluentui/react';
+import {IDropdownOption, DefaultButton, Panel, IComboBox, IComboBoxOption, MessageBar, MessageBarType, MessageBarButton, PanelType, Dialog, DialogFooter, DialogType} from '@fluentui/react';
 import {useBoolean} from '@fluentui/react-hooks';
 
 import {CalendarOperations} from '../Services/CalendarOperations';
@@ -12,7 +12,7 @@ import {updateCalSettings} from '../Services/CalendarSettingsOps';
 import {addToMyGraphCal, getMySchoolCalGUID} from '../Services/CalendarRequests';
 import {formatEvDetails} from '../Services/EventFormat';
 import {setWpData} from '../Services/WpProperties';
-import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, deleteEvent, updateEvent, isEventCreator} from '../Services/RoomOperations';
+import {getRooms, getPeriods, getLocationGroup, getGuidelines, getRoomsCalendarName, addEvent, deleteItem, updateEvent, isEventCreator} from '../Services/RoomOperations';
 import {isUserManage} from '../Services/RoomOperations';
 
 import ICalendar from './ICalendar/ICalendar';
@@ -28,6 +28,7 @@ import IRoomsManage from './IRoomsManage/IRoomsManage';
 
 import toast, { Toaster } from 'react-hot-toast';
 import { IFrameDialog } from "@pnp/spfx-controls-react/lib/IFrameDialog";
+import { PrimaryButton } from 'office-ui-fabric-react';
 
 
 export default function MergedCalendar (props:IMergedCalendarProps) {
@@ -305,7 +306,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     setBookFormMode('Edit');
   };
   const onDeleteBookingClickHandler = (eventIdParam: any) =>{
-    deleteEvent(props.context, roomsCalendar, eventIdParam).then(()=>{
+    deleteItem(props.context, roomsCalendar, eventIdParam).then(()=>{
       const callback = () =>{
         dismissPanelBook();
         popToast('The Event Booking is successfully deleted!');   
@@ -340,9 +341,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
   //Rooms, Periods, Guidelines Management
   const [iframeUrl, setIframeUrl] = React.useState('');
   const [iframeShow, setIframeShow] = React.useState(false);
-  const onRoomsManageAdd = (newFormUrl: string) =>{
+  const [iframeState, setIframeState] = React.useState('Add');
+  const onRoomsManage = (newFormUrl: string, roomsManageState: string) =>{
     setIframeUrl(newFormUrl);
     setIframeShow(true);
+    setIframeState(roomsManageState);
   };
   const onIFrameDismiss = async (event: React.MouseEvent) => {
     setIframeShow(false);
@@ -355,11 +358,48 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
     });
   };
   const onIFrameLoad = async (iframe: any) => {
-    let keepOpen = iframe.contentWindow.location.href.indexOf('Newform.aspx') > 0;
+    let keepOpen: boolean;
+    if (iframeState === "Add")
+      keepOpen = iframe.contentWindow.location.href.indexOf('Newform.aspx') > 0 || iframe.contentWindow.location.href.indexOf('Editform.aspx') > 0;
+    else
+      keepOpen = iframe.contentWindow.location.href.indexOf('AllItems.aspx') > 0;
     if (!keepOpen) {
       onIFrameDismiss(null);
     }
   };
+  const onEditRoom = (editedRoomId: any) =>{
+    const editRoomUrl = `${props.context.pageContext.web.serverRelativeUrl}/Lists/${roomsList}/Editform.aspx?ID=${editedRoomId}`;
+    setIframeUrl(editRoomUrl);
+    setIframeShow(true);
+    getRooms(props.context, roomsList).then((results)=>{
+      setRooms(results);
+      setFilteredRooms(results);
+    });
+  };
+  const onDeleteRoomClickHandler = (roomIdParam: any) =>{
+    deleteItem(props.context, roomsList, roomIdParam).then(()=>{
+      const callback = () =>{
+        dismissPanelDetails();
+        toggleHideDialog();
+        popToast('The Room is successfully deleted!');   
+      };
+      getRooms(props.context, roomsList).then((results)=>{
+        setRooms(results);
+        setFilteredRooms(results);
+        callback();
+      });
+    });
+  };
+  const modelProps = {
+    isBlocking: false,
+    styles: { main: { maxWidth: 450 } },
+  };
+  const dialogContentProps = {
+      type: DialogType.largeHeader,
+      title: 'Delete Room',
+      subText: 'Are you sure you want to delete this room?',
+  };
+  //const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
 
   return(
     <div className={styles.mergedCalendar}>
@@ -382,18 +422,24 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           <React.Fragment>
             <IFrameDialog 
               url={iframeUrl}
-              width={'570px'}
-              height={'570px'}
+              width={iframeState === "Add" ? '40%' : '70%'}
+              height={'90%'}
               hidden={!iframeShow}
               iframeOnLoad={(iframe) => onIFrameLoad(iframe)}
               onDismiss={(event) => onIFrameDismiss(event)}
+              allowFullScreen = {true}
+              dialogContentProps={{
+                type: DialogType.close,
+                showCloseButton: true
+              }}
             />
             <IRoomsManage 
               context={props.context}
               roomsList={props.roomsList}
               periodsList={props.periodsList}
               guidelinesList={props.guidelinesList}
-              onRoomsManageAdd={onRoomsManageAdd}
+              onRoomsManage={onRoomsManage}
+              iframeState = {iframeState}
             />
           </React.Fragment>
         }
@@ -458,11 +504,29 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
         isFooterAtBottom={true}
         isBlocking={false}
         // isLightDismiss={true}
+      >
+        <IRoomDetails roomInfo={roomInfo} />
+        <Dialog
+            hidden={hideDialog}
+            onDismiss={toggleHideDialog}
+            dialogContentProps={dialogContentProps}
+            modalProps={modelProps}
         >
-            <IRoomDetails roomInfo={roomInfo} />
-            <div className={styles.panelBtns}>
-              <DefaultButton className={styles.marginL10} onClick={dismissPanelDetails} text="Cancel" />
-            </div>
+            <DialogFooter>
+                <PrimaryButton onClick={() => onDeleteRoomClickHandler(roomInfo.Id)} text="Yes" />
+                <DefaultButton onClick={toggleHideDialog} text="No" />
+            </DialogFooter>
+        </Dialog>
+
+        <div className={styles.panelBtns}>
+          {isUserManage &&
+            <React.Fragment>
+              <PrimaryButton className={styles.marginL10} onClick={() => onEditRoom(roomInfo.Id)} text="Edit" />
+              <PrimaryButton className={styles.marginL10} onClick={toggleHideDialog} text="Delete" />
+            </React.Fragment>
+          }
+          <DefaultButton className={styles.marginL10} onClick={dismissPanelDetails} text="Cancel" />
+        </div>
       </Panel>
       <Panel
         isOpen={isOpenBook}
@@ -497,9 +561,6 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           </MessageBar>
         </IRoomBook>
       </Panel>
-
-        
-
 
     </div>
   );
