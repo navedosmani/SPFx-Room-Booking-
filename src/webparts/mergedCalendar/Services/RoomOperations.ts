@@ -208,8 +208,8 @@ export const addEvent = async (context: WebPartContext, roomsCalListName: string
     }
 };
 
-export const deleteEvent = async (context: WebPartContext, roomsCalListName: string, eventId: any) => {
-    const restUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/getByTitle('${roomsCalListName}')/items(${eventId})`;
+export const deleteItem = async (context: WebPartContext, listName: string, itemId: any) => {
+    const restUrl = `${context.pageContext.web.absoluteUrl}/_api/web/lists/getByTitle('${listName}')/items(${itemId})`;
     let spOptions: ISPHttpClientOptions = {
         headers:{
             Accept: "application/json;odata=nometadata", 
@@ -222,7 +222,7 @@ export const deleteEvent = async (context: WebPartContext, roomsCalListName: str
 
     const _data = await context.spHttpClient.post(restUrl, SPHttpClient.configurations.v1, spOptions);
     if (_data.ok){
-        console.log('Event Booking deleted!');
+        console.log('Item deleted!');
     }
 };
 
