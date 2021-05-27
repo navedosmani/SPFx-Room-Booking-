@@ -5,5 +5,6 @@ export interface IRoomsManageProps{
     roomsList: string;
     periodsList: string;
     guidelinesList: string;
-    onRoomsManageAdd: any;    
+    onRoomsManage: any;   
+    iframeState: string; 
 }
