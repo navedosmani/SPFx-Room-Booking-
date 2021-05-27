@@ -400,6 +400,10 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
       subText: 'Are you sure you want to delete this room?',
   };
   //const [hideDialog, { toggle: toggleHideDialog }] = useBoolean(true);
+  const onDeleteRoomClick = (roomIdParam: any) =>{
+    toggleHideDialog();
+    setRoomId(roomIdParam);
+  };
 
   return(
     <div className={styles.mergedCalendar}>
@@ -417,9 +421,22 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           onCheckAvailClick={() => onCheckAvailClick} 
           onBookClick={()=> onBookClick}
           onViewDetailsClick={()=>onViewDetailsClick}
+          onEditClick={() => onEditRoom}
+          onDeleteClick={() => onDeleteRoomClick}
         />
         {isUserManage &&
           <React.Fragment>
+            <Dialog
+              hidden={hideDialog}
+              onDismiss={toggleHideDialog}
+              dialogContentProps={dialogContentProps}
+              modalProps={modelProps}
+            >
+              <DialogFooter>
+                  <PrimaryButton onClick={() => onDeleteRoomClickHandler(roomId)} text="Yes" />
+                  <DefaultButton onClick={toggleHideDialog} text="No" />
+              </DialogFooter>
+            </Dialog>
             <IFrameDialog 
               url={iframeUrl}
               width={iframeState === "Add" ? '40%' : '70%'}
@@ -440,7 +457,7 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
               guidelinesList={props.guidelinesList}
               onRoomsManage={onRoomsManage}
               iframeState = {iframeState}
-            />
+            />            
           </React.Fragment>
         }
       </div>

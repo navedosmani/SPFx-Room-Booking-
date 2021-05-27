@@ -12,6 +12,8 @@ export default function IRooms (props:IRoomsProps) {
                     onCheckAvailClick = {props.onCheckAvailClick(room.Id)}
                     onViewDetailsClick = {props.onViewDetailsClick(room)}
                     onBookClick = {props.onBookClick(room)}
+                    onEditClick={props.onEditClick(room.Id)}
+                    onDeleteClick={props.onDeleteClick(room.Id)}
                 />
             );
         })

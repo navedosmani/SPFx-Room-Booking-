@@ -1,5 +1,6 @@
 .roomCard{
     margin-bottom: 15px;
+    position: relative;
     h3{
         margin: 0;
         padding: 5px 10px;
@@ -41,6 +42,26 @@
         margin: 10px 0 0 0;
         font-size: 100px;
         text-align: center;
+    }
+    .roomControls{
+        position: absolute;
+        right: 3px;
+        top: 40px;
+        width: 28px;
+        background: #f7f7f7;
+        height: 80%;
+        border-left: 1px solid #ddd;
+        border-radius: 5px;
+        button{
+            padding: 0;
+            height: 50%;
+            &:hover{
+                background: #eee;
+            }
+        }
+        button:first-child{
+            border-bottom: 1px solid #ddd;
+        }
     }
 }
 
@@ -248,7 +269,7 @@
 
 .roomsManage{
     i{
-        font-size: 10px;
+        font-size: 12px;
     }
     div{
         margin-bottom: 5px;

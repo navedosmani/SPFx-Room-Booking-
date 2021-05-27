@@ -3,4 +3,6 @@ export interface IRoomProps{
     onViewDetailsClick: any;
     onBookClick: any;
     roomInfo: any;
+    onEditClick: any;
+    onDeleteClick: any;
 }

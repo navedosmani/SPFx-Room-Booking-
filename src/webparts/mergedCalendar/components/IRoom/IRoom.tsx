@@ -2,6 +2,7 @@ import * as React from 'react';
 import styles from '../Room.module.scss';
 import { IRoomProps } from './IRoomProps';
 import {IIconProps, initializeIcons, ActionButton, Icon} from '@fluentui/react';
+import {isUserManage} from '../../Services/RoomOperations';
 
 export default function IRoom (props:IRoomProps) {
 
@@ -9,6 +10,8 @@ export default function IRoom (props:IRoomProps) {
     const detailsIcon: IIconProps = { iconName: 'Articles' };
     const reserveIcon: IIconProps = { iconName: 'PrimaryCalendar' };
     const checkAvailIcon: IIconProps = { iconName: 'ReceiptCheck' };
+    const editIcon: IIconProps = { iconName: 'Edit' };
+    const deleteIcon: IIconProps = { iconName: 'Delete' };
 
     return(
         <div className={styles.roomCard}>
@@ -26,6 +29,12 @@ export default function IRoom (props:IRoomProps) {
                     {/* <label>{props.roomInfo.TitleColor}: <span className={styles.roomBullet} style={{backgroundColor: props.roomInfo.Colour}}></span> {props.roomInfo.Colour}</label> */}
                 </div>
             </div>
+            {isUserManage &&
+                <div className={styles.roomControls}>
+                    <ActionButton iconProps={editIcon} onClick={() => props.onEditClick(props.roomInfo.Id)}></ActionButton>
+                    <ActionButton iconProps={deleteIcon} onClick={() => props.onDeleteClick(props.roomInfo.Id)}></ActionButton>
+                </div>
+            }
         </div> 
     );
 }
