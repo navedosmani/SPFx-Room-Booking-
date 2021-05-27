@@ -13,6 +13,7 @@
   },
   "externals": {},
   "localizedResources": {
-    "MergedCalendarWebPartStrings": "lib/webparts/mergedCalendar/loc/{locale}.js"
+    "MergedCalendarWebPartStrings": "lib/webparts/mergedCalendar/loc/{locale}.js",
+    "ControlStrings": "node_modules/@pnp/spfx-controls-react/lib/loc/{locale}.js"
   }
 }
