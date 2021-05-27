@@ -2,8 +2,13 @@ import * as React from 'react';
 import roomStyles from '../Room.module.scss';
 import { IRoomDetailsProps } from './IRoomDetailsProps';
 import { FontIcon } from '@fluentui/react/lib/Icon';
+import {initializeIcons, Icon} from '@fluentui/react';
+
 
 export default function IRoomDetails (props:IRoomDetailsProps) {
+
+    initializeIcons();
+
     return(
         <div className={roomStyles.roomDetailsPanel}>
             <h3>Room Details</h3>
@@ -12,8 +17,10 @@ export default function IRoomDetails (props:IRoomDetailsProps) {
                 className={roomStyles.roomColor}>
             </div>
             <div className={roomStyles.roomImageCntnr}>
-                {props.roomInfo.Photo !== undefined &&
-                    <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} /> 
+                {props.roomInfo.Photo ?
+                    <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} />    
+                    :
+                    <Icon className={roomStyles.noPicture} iconName="FileImage" />
                 }
             </div>
             <ul>
@@ -40,7 +47,7 @@ export default function IRoomDetails (props:IRoomDetailsProps) {
                 <li>
                     <FontIcon aria-label="Comments" iconName="Comment" className={roomStyles.roomDetailsIcon} />
                     <label>Comments: </label><span>{props.roomInfo.OData__Comments}</span>
-                    </li>
+                </li>
             </ul>
         </div>
     );

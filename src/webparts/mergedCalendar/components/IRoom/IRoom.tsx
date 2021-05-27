@@ -1,7 +1,7 @@
 import * as React from 'react';
 import styles from '../Room.module.scss';
 import { IRoomProps } from './IRoomProps';
-import {IIconProps, initializeIcons, ActionButton} from '@fluentui/react';
+import {IIconProps, initializeIcons, ActionButton, Icon} from '@fluentui/react';
 
 export default function IRoom (props:IRoomProps) {
 
@@ -13,7 +13,11 @@ export default function IRoom (props:IRoomProps) {
     return(
         <div className={styles.roomCard}>
             <h3 style={{borderBottomColor: props.roomInfo.Colour}}><span className={styles.roomBullet} style={{backgroundColor: props.roomInfo.Colour}}></span>{props.roomInfo.Title}</h3> 
-            <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} />    
+            {props.roomInfo.Photo ?
+                <img width='150' src={JSON.parse(props.roomInfo.Photo)['serverRelativeUrl']} />    
+                :
+                <Icon className={styles.noPicture} iconName="FileImage" />
+            }
             <div className={styles.roomDetails}>
                 <div className={styles.roomActions}>
                     <ActionButton className={styles.roomActBtn} iconProps={detailsIcon} onClick={() => props.onViewDetailsClick(props.roomInfo)}>{props.roomInfo.TitleRoomDetails}</ActionButton>
