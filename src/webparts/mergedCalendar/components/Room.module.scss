@@ -1,6 +1,31 @@
+.allRoomsCntnr{
+    float:left;
+    width: 28%;
+}
+.allCalendarCntnr{
+    float:left;
+    width: 70%;
+    margin-left: 2%;
+    position: relative;
+}
+.roomsCalendarCntnr{
+    &:after{
+        content: " ";
+        clear: both;
+        display: block;
+    }
+}
+.helpMsgBar{
+    margin-top: 20px;
+}
 .roomCard{
     margin-bottom: 15px;
     position: relative;
+    .roomCardDetails{
+        display: flex;
+        flex-wrap: nowrap;
+        margin-top: 10px;
+    }
     h3{
         margin: 0;
         padding: 5px 10px;
@@ -12,18 +37,22 @@
         box-shadow: 1px 1px 3px 2px #ddd;
     }
     img{
-        float: left;
-        width: 140px;
+        // float: left;
+        // width: 140px;
+        // height: 120px;
+        // border-radius: 0 0 0 3px;
+        // margin-top: 10px;
         height: 120px;
         border-radius: 0 0 0 3px;
-        margin-top: 10px;
+        display: flex;
     }
     .roomDetails{
-        float: left;
-        width: 55%;
+        // float: left;
+        // width: 55%;
+        display: flex;
         .roomActions{
             padding: 0 10px;
-            margin-top: 15px;       
+            // margin-top: 15px;       
             .roomActBtn{
                 height: 30px;
             }
@@ -35,23 +64,33 @@
         content: " ";
     }
     .noPicture{
+        // color: #bbb;
+        // float: left;
+        // width: 140px;
+        // height: 120px;
+        // margin: 10px 0 0 0;
+        // font-size: 100px;
+        // text-align: center;
         color: #bbb;
-        float: left;
         width: 140px;
-        height: 120px;
-        margin: 10px 0 0 0;
         font-size: 100px;
-        text-align: center;
+        display: flex;
     }
     .roomControls{
-        position: absolute;
-        right: 3px;
-        top: 40px;
+        // position: absolute;
+        // right: 3px;
+        // top: 40px;
+        // width: 28px;
+        // background: #f7f7f7;
+        // height: 80%;
+        // border-left: 1px solid #ddd;
+        // border-radius: 5px;
         width: 28px;
         background: #f7f7f7;
-        height: 80%;
         border-left: 1px solid #ddd;
         border-radius: 5px;
+        display: flex;
+        flex-wrap: wrap;
         button{
             padding: 0;
             height: 50%;

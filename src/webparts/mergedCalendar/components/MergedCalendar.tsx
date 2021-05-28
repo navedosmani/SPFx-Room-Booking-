@@ -410,67 +410,68 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
 
       <Toaster />
       
-      <div style={{float:'left', width: '28%'}}> 
-      {filteredRooms.length !== 0 ?
-        <React.Fragment>
-          <IRoomDropdown 
-            onFilterChanged={onFilterChanged}
-            roomSelectedKey={roomSelectedKey}
-            locationGroup = {locationGroup}
-          />
-          <IRooms 
-            rooms={filteredRooms} 
-            onCheckAvailClick={() => onCheckAvailClick} 
-            onBookClick={()=> onBookClick}
-            onViewDetailsClick={()=>onViewDetailsClick}
-            onEditClick={() => onEditRoom}
-            onDeleteClick={() => onDeleteRoomClick}
-          />
-          </React.Fragment>
-          :
-          <MessageBar messageBarType={MessageBarType.warning} isMultiline={true} >
-            There are no Rooms created yet. Please use the "Add" and "Edit" options below to manage your Rooms, Periods and Guidelines.
-          </MessageBar>
-        }
-        {isUserManage &&
+      <div className={roomStyles.roomsCalendarCntnr}>
+        <div className={roomStyles.allRoomsCntnr}> 
+        {filteredRooms.length !== 0 ?
           <React.Fragment>
-            <Dialog
-              hidden={hideDialog}
-              onDismiss={toggleHideDialog}
-              dialogContentProps={dialogContentProps}
-              modalProps={modelProps}
-            >
-              <DialogFooter>
-                  <PrimaryButton onClick={() => onDeleteRoomClickHandler(roomId)} text="Yes" />
-                  <DefaultButton onClick={toggleHideDialog} text="No" />
-              </DialogFooter>
-            </Dialog>
-            <IFrameDialog 
-              url={iframeUrl}
-              width={iframeState === "Add" ? '40%' : '70%'}
-              height={'90%'}
-              hidden={!iframeShow}
-              iframeOnLoad={(iframe) => onIFrameLoad(iframe)}
-              onDismiss={(event) => onIFrameDismiss(event)}
-              allowFullScreen = {true}
-              dialogContentProps={{
-                type: DialogType.close,
-                showCloseButton: true
-              }}
+            <IRoomDropdown 
+              onFilterChanged={onFilterChanged}
+              roomSelectedKey={roomSelectedKey}
+              locationGroup = {locationGroup}
             />
-            <IRoomsManage 
-              context={props.context}
-              roomsList={props.roomsList}
-              periodsList={props.periodsList}
-              guidelinesList={props.guidelinesList}
-              onRoomsManage={onRoomsManage}
-              iframeState = {iframeState}
-            />            
-          </React.Fragment>
-        }
-      </div>
+            <IRooms 
+              rooms={filteredRooms} 
+              onCheckAvailClick={() => onCheckAvailClick} 
+              onBookClick={()=> onBookClick}
+              onViewDetailsClick={()=>onViewDetailsClick}
+              onEditClick={() => onEditRoom}
+              onDeleteClick={() => onDeleteRoomClick}
+            />
+            </React.Fragment>
+            :
+            <MessageBar messageBarType={MessageBarType.warning} isMultiline={true} >
+              There are no Rooms created yet. Please use the "Add" and "Edit" options below to manage your Rooms, Periods and Guidelines.
+            </MessageBar>
+          }
+          {isUserManage &&
+            <React.Fragment>
+              <Dialog
+                hidden={hideDialog}
+                onDismiss={toggleHideDialog}
+                dialogContentProps={dialogContentProps}
+                modalProps={modelProps}
+              >
+                <DialogFooter>
+                    <PrimaryButton onClick={() => onDeleteRoomClickHandler(roomId)} text="Yes" />
+                    <DefaultButton onClick={toggleHideDialog} text="No" />
+                </DialogFooter>
+              </Dialog>
+              <IFrameDialog 
+                url={iframeUrl}
+                width={iframeState === "Add" ? '40%' : '70%'}
+                height={'90%'}
+                hidden={!iframeShow}
+                iframeOnLoad={(iframe) => onIFrameLoad(iframe)}
+                onDismiss={(event) => onIFrameDismiss(event)}
+                allowFullScreen = {true}
+                dialogContentProps={{
+                  type: DialogType.close,
+                  showCloseButton: true
+                }}
+              />
+              <IRoomsManage 
+                context={props.context}
+                roomsList={props.roomsList}
+                periodsList={props.periodsList}
+                guidelinesList={props.guidelinesList}
+                onRoomsManage={onRoomsManage}
+                iframeState = {iframeState}
+              />            
+            </React.Fragment>
+          }
+        </div>
 
-      <div style={{float:'left', width: '70%', marginLeft: '2%', position: 'relative'}}>
+        <div className={roomStyles.allCalendarCntnr}>
         {isFiltered &&
           <div className={roomStyles.filterWarning}>
             <MessageBar 
@@ -478,11 +479,11 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
               isMultiline={false}
               actions={
               <div>
-                  <MessageBarButton onClick={onResetRoomsClick}>Reset Filter</MessageBarButton>
+                  <MessageBarButton onClick={onResetRoomsClick}>View All</MessageBarButton>
               </div>
               }
             >
-              Please note that you are not viewing all rooms now. Click 'Reset Filter' to view all resources.
+              Please note that you are not viewing all resources now.
             </MessageBar>
           </div>
         }
@@ -500,8 +501,8 @@ export default function MergedCalendar (props:IMergedCalendarProps) {
           rooms={filteredRooms}
         />
       </div>
-
-      <MessageBar isMultiline={false}>
+      </div>
+      <MessageBar className={roomStyles.helpMsgBar} isMultiline={false}>
         Need help? 
         <a href="https://pdsb1.sharepoint.com/ltss/classtech/rbs" target="_blank" data-interception="off">
           Visit our website.
