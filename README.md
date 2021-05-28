@@ -54,3 +54,9 @@ C:\myfiles\Github\SPFx-Room-Booking-\config\package-solution.json
 C:\myfiles\Github\SPFx-Room-Booking-\src\webparts\mergedCalendar\MergedCalendarWebPart.manifest.json
 
 
+# References
+Used PnP-sfx controls for iFrameDialog
+https://pnp.github.io/sp-dev-fx-controls-react/controls/IFrameDialog/
+
+`npm i @pnp/sp` <br/>
+`npm install @pnp/spfx-controls-react --save --save-exact` <br/>
